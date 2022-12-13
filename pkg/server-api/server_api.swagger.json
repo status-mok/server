@@ -1,0 +1,77 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "server-api/server_api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ServerService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/server/create": {
+      "post": {
+        "operationId": "ServerService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/serverCreateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serverCreateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ServerService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "serverCreateRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "minLength": 1
+        },
+        "ip": {
+          "type": "string",
+          "example": "0.0.0.0",
+          "default": "\"0.0.0.0\"",
+          "minLength": 1
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64",
+          "example": 8080,
+          "maximum": 65535
+        }
+      },
+      "required": [
+        "name",
+        "port"
+      ]
+    },
+    "serverCreateResponse": {
+      "type": "object"
+    }
+  }
+}
