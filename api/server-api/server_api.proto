@@ -46,7 +46,6 @@ message CreateRequest {
     },
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,
-      default: "\"0.0.0.0\"",
       example: "\"0.0.0.0\""
     }
   ];
