@@ -27,6 +27,7 @@ message CreateRequest {
     }
   };
 
+  // Name is a unique identifier of server.
   string name = 1 [
     json_name = "name",
     (validate.rules).string = {
@@ -38,6 +39,7 @@ message CreateRequest {
       example: "\"http-server-8080\""
     }
   ];
+  // The server shall listen to this IP address.
   optional string ip = 2 [
     json_name = "ip",
     (validate.rules).string = {
@@ -49,6 +51,7 @@ message CreateRequest {
       example: "\"0.0.0.0\""
     }
   ];
+  // The server shall listen to this port.
   uint32 port = 3 [
     json_name = "port",
     (validate.rules).uint32 = {

@@ -50,17 +50,20 @@
         "name": {
           "type": "string",
           "example": "http-server-8080",
+          "description": "Name is a unique identifier of server.",
           "minLength": 1
         },
         "ip": {
           "type": "string",
           "example": "0.0.0.0",
+          "description": "The server shall listen to this IP address.",
           "minLength": 1
         },
         "port": {
           "type": "integer",
           "format": "int64",
           "example": 8080,
+          "description": "The server shall listen to this port.",
           "maximum": 65535
         }
       },

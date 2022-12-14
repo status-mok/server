@@ -28,9 +28,12 @@ type CreateRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Ip   *string `protobuf:"bytes,2,opt,name=ip,proto3,oneof" json:"ip,omitempty"`
-	Port uint32  `protobuf:"varint,3,opt,name=port,proto3" json:"port,omitempty"`
+	// Name is a unique identifier of server.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// The server shall listen to this IP address.
+	Ip *string `protobuf:"bytes,2,opt,name=ip,proto3,oneof" json:"ip,omitempty"`
+	// The server shall listen to this port.
+	Port uint32 `protobuf:"varint,3,opt,name=port,proto3" json:"port,omitempty"`
 }
 
 func (x *CreateRequest) Reset() {
