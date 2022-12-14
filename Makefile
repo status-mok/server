@@ -1,4 +1,7 @@
-generate: buf-generate
+generate: buf-generate go-generate
+
+go-generate:
+	@go generate ./...
 
 buf-format:
 	@buf format -w
