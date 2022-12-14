@@ -10,10 +10,10 @@ The main goal is to make an all-in-one mock server for Web developers and tester
 3. Servers can be created manually or using config files.
 4. Mock server configuration can be exported and imported (own format).
 5. It supports the most common protocols:
-   * HTTP (REST, GraphQL)
-   * WebSockets
+   * HTTP (REST, GraphQL, WebSockets)
    * GRPC
    * Thrift
+   * TCP/UDP
 6. You can add expectations for each endpoint/rpc based on input values.
 7. You can customize response of each endpoint/rpc using:
    * fixed values

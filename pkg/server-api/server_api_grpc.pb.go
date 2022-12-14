@@ -35,7 +35,7 @@ func NewServerServiceClient(cc grpc.ClientConnInterface) ServerServiceClient {
 
 func (c *serverServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, "/statusmok.server.server.ServerService/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _ServerService_Create_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/statusmok.server.server.ServerService/Create",
+		FullMethod: "/statusmok.server.server_api.ServerService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerServiceServer).Create(ctx, req.(*CreateRequest))
@@ -92,7 +92,7 @@ func _ServerService_Create_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ServerService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "statusmok.server.server.ServerService",
+	ServiceName: "statusmok.server.server_api.ServerService",
 	HandlerType: (*ServerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

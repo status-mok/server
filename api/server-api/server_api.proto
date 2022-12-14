@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package statusmok.server.server;
+package statusmok.server.server_api;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -22,7 +22,8 @@ message CreateRequest {
     json_schema: {
       required: [
         "name",
-        "port"
+        "port",
+        "type"
       ]
     }
   };
@@ -64,6 +65,30 @@ message CreateRequest {
       example: "8080"
     }
   ];
+  // The server type.
+  ServerType type = 4 [
+    json_name = "type",
+    (validate.rules).enum.defined_only = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      enum: [
+        "SERVER_TYPE_UNSPECIFIED",
+        "SERVER_TYPE_HTTP",
+        "SERVER_TYPE_GRPC",
+        "SERVER_TYPE_THRIFT",
+        "SERVER_TYPE_TCP",
+        "SERVER_TYPE_UDP"
+      ]
+    }
+  ];
 }
 
 message CreateResponse {}
+
+enum ServerType {
+  SERVER_TYPE_UNSPECIFIED = 0;
+  SERVER_TYPE_HTTP = 1;
+  SERVER_TYPE_GRPC = 2;
+  SERVER_TYPE_THRIFT = 3;
+  SERVER_TYPE_TCP = 4;
+  SERVER_TYPE_UDP = 5;
+}

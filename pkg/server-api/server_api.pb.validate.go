@@ -79,6 +79,17 @@ func (m *CreateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if _, ok := ServerType_name[int32(m.GetType())]; !ok {
+		err := CreateRequestValidationError{
+			field:  "Type",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if m.Ip != nil {
 
 		if m.GetIp() != "" {

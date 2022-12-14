@@ -23,7 +23,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serverCreateResponse"
+              "$ref": "#/definitions/server_apiCreateResponse"
             }
           }
         },
@@ -33,7 +33,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serverCreateRequest"
+              "$ref": "#/definitions/server_apiCreateRequest"
             }
           }
         ],
@@ -44,7 +44,7 @@
     }
   },
   "definitions": {
-    "serverCreateRequest": {
+    "server_apiCreateRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -65,15 +65,40 @@
           "example": 8080,
           "description": "The server shall listen to this port.",
           "maximum": 65535
+        },
+        "type": {
+          "$ref": "#/definitions/server_apiServerType",
+          "enum": [
+            "SERVER_TYPE_UNSPECIFIED",
+            "SERVER_TYPE_HTTP",
+            "SERVER_TYPE_GRPC",
+            "SERVER_TYPE_THRIFT",
+            "SERVER_TYPE_TCP",
+            "SERVER_TYPE_UDP"
+          ],
+          "description": "The server type."
         }
       },
       "required": [
         "name",
-        "port"
+        "port",
+        "type"
       ]
     },
-    "serverCreateResponse": {
+    "server_apiCreateResponse": {
       "type": "object"
+    },
+    "server_apiServerType": {
+      "type": "string",
+      "enum": [
+        "SERVER_TYPE_UNSPECIFIED",
+        "SERVER_TYPE_HTTP",
+        "SERVER_TYPE_GRPC",
+        "SERVER_TYPE_THRIFT",
+        "SERVER_TYPE_TCP",
+        "SERVER_TYPE_UDP"
+      ],
+      "default": "SERVER_TYPE_UNSPECIFIED"
     }
   }
 }
