@@ -5,11 +5,13 @@ import (
 	"os"
 
 	"github.com/sethvargo/go-envconfig"
+	"github.com/status-mok/server/internal/pkg/log"
+	"go.uber.org/zap/zapcore"
 	"gopkg.in/yaml.v3"
 )
 
 type AppConfig struct {
-	LogLevel         string `mapstructure:"log_level" env:"MOK_LOG_LEVEL,default=error"`
+	LogLevelStr      string `mapstructure:"log_level" env:"MOK_LOG_LEVEL,default=debug"`
 	AdminAPIgrpcHost string `mapstructure:"admin_api_grpc_host" env:"MOK_ADMIN_API_GRPC_HOST"`
 	AdminAPIgrpcPort string `mapstructure:"admin_api_grpc_port" env:"MOK_ADMIN_API_GRPC_PORT,default=2001"`
 	AdminAPIhttpHost string `mapstructure:"admin_api_http_host" env:"MOK_ADMIN_API_HTTP_HOST"`
@@ -35,6 +37,15 @@ func NewAppConfig(ctx context.Context, configPath string) (*AppConfig, error) {
 	}
 
 	return &conf, nil
+}
+
+func (conf AppConfig) LogLevel() zapcore.LevelEnabler {
+	level, err := zapcore.ParseLevel(conf.LogLevelStr)
+	if err != nil {
+		return log.DefaultLevel
+	}
+
+	return level
 }
 
 func (conf AppConfig) AdminHTTPAddress() string {

@@ -12,16 +12,16 @@ import (
 
 var (
 	globalLogger *zap.SugaredLogger
-	defaultLevel = zap.NewAtomicLevelAt(zap.DebugLevel)
+	DefaultLevel = zap.DebugLevel
 )
 
 func init() {
-	globalLogger = New(defaultLevel, os.Stdout)
+	globalLogger = New(DefaultLevel, os.Stdout)
 }
 
 func New(level zapcore.LevelEnabler, writer io.Writer, options ...zap.Option) *zap.SugaredLogger {
 	if level == nil {
-		level = defaultLevel
+		level = DefaultLevel
 	}
 
 	return zap.New(
@@ -41,6 +41,10 @@ func New(level zapcore.LevelEnabler, writer io.Writer, options ...zap.Option) *z
 		),
 		options...,
 	).Sugar()
+}
+
+func SetLogger(logger *zap.SugaredLogger) {
+	globalLogger = logger
 }
 
 func Logger(_ context.Context) *zap.SugaredLogger {

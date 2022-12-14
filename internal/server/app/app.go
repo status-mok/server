@@ -40,6 +40,8 @@ func (app *app) Start(ctx context.Context, configPath string) error {
 		return err
 	}
 
+	log.SetLogger(log.New(app.conf.LogLevel(), os.Stdout))
+
 	app.initServices(ctx)
 
 	errGroup, errCtx := errgroup.WithContext(ctx)
