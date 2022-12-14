@@ -102,12 +102,12 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 		defer cancel()
 
 		if err := srv.Shutdown(timeoutCtx); err != nil {
-			log.Logger(ctx).Errorf("failed to stop http server: '%v'", err)
+			log.L(ctx).Errorf("failed to stop http server: '%v'", err)
 		}
-		log.Logger(ctx).Info("admin api http server stopped")
+		log.L(ctx).Info("admin api http server stopped")
 	}()
 
-	log.Logger(ctx).Infof("admin api http server listening at '%v'", app.conf.AdminHTTPAddress())
+	log.L(ctx).Infof("admin api http server listening at '%v'", app.conf.AdminHTTPAddress())
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}
@@ -118,7 +118,7 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 func (app *app) startGRPCServer(ctx context.Context) error {
 	listener, err := net.Listen("tcp", app.conf.AdminGRPCAddress())
 	if err != nil {
-		log.Logger(ctx).Fatalf("failed to init tcp listener: '%v'", err)
+		log.L(ctx).Fatalf("failed to init tcp listener: '%v'", err)
 	}
 
 	var opts []grpc.ServerOption
@@ -129,10 +129,10 @@ func (app *app) startGRPCServer(ctx context.Context) error {
 		blockUntilExitSignalOrCtxTermination(ctx)
 
 		grpcServer.GracefulStop()
-		log.Logger(ctx).Info("admin api grpc server stopped")
+		log.L(ctx).Info("admin api grpc server stopped")
 	}()
 
-	log.Logger(ctx).Infof("admin api grpc server listening on '%v'", app.conf.AdminGRPCAddress())
+	log.L(ctx).Infof("admin api grpc server listening on '%v'", app.conf.AdminGRPCAddress())
 	if err = grpcServer.Serve(listener); err != nil {
 		return err
 	}

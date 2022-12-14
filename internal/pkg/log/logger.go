@@ -10,8 +10,45 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+type Logger interface {
+	Desugar() *zap.Logger
+	Named(name string) *zap.SugaredLogger
+	WithOptions(opts ...zap.Option) *zap.SugaredLogger
+	With(args ...interface{}) *zap.SugaredLogger
+	Level() zapcore.Level
+	Debug(args ...interface{})
+	Info(args ...interface{})
+	Warn(args ...interface{})
+	Error(args ...interface{})
+	DPanic(args ...interface{})
+	Panic(args ...interface{})
+	Fatal(args ...interface{})
+	Debugf(template string, args ...interface{})
+	Infof(template string, args ...interface{})
+	Warnf(template string, args ...interface{})
+	Errorf(template string, args ...interface{})
+	DPanicf(template string, args ...interface{})
+	Panicf(template string, args ...interface{})
+	Fatalf(template string, args ...interface{})
+	Debugw(msg string, keysAndValues ...interface{})
+	Infow(msg string, keysAndValues ...interface{})
+	Warnw(msg string, keysAndValues ...interface{})
+	Errorw(msg string, keysAndValues ...interface{})
+	DPanicw(msg string, keysAndValues ...interface{})
+	Panicw(msg string, keysAndValues ...interface{})
+	Fatalw(msg string, keysAndValues ...interface{})
+	Debugln(args ...interface{})
+	Infoln(args ...interface{})
+	Warnln(args ...interface{})
+	Errorln(args ...interface{})
+	DPanicln(args ...interface{})
+	Panicln(args ...interface{})
+	Fatalln(args ...interface{})
+	Sync() error
+}
+
 var (
-	globalLogger *zap.SugaredLogger
+	globalLogger Logger
 	DefaultLevel = zap.DebugLevel
 )
 
@@ -43,11 +80,11 @@ func New(level zapcore.LevelEnabler, writer io.Writer, options ...zap.Option) *z
 	).Sugar()
 }
 
-func SetLogger(logger *zap.SugaredLogger) {
+func SetLogger(logger Logger) {
 	globalLogger = logger
 }
 
-func Logger(_ context.Context) *zap.SugaredLogger {
+func L(_ context.Context) Logger {
 	return globalLogger
 }
 

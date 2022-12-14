@@ -14,6 +14,6 @@ func main() {
 	application := app.NewApp()
 
 	if err := application.Start(ctx, ""); err != nil {
-		log.Logger(ctx).Panic(err)
+		log.L(ctx).Panic(err)
 	}
 }
