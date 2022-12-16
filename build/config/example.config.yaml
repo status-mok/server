@@ -1,0 +1,14 @@
+# MOK_LOG_LEVEL (default "debug")
+log_level: debug
+
+admin_api:
+  grpc:
+    # MOK_ADMIN_API_GRPC_HOST (default "")
+#    host: 0.0.0.0
+    # MOK_ADMIN_API_GRPC_PORT (default "2001")
+    port: 2001
+  http:
+    # MOK_ADMIN_API_HTTP_HOST (default "")
+#    host: 0.0.0.0
+    # MOK_ADMIN_API_HTTP_PORT (default "2002")
+    port: 2002

@@ -5,18 +5,24 @@ import (
 	"os"
 
 	"github.com/sethvargo/go-envconfig"
+	"github.com/spf13/viper"
 	"github.com/status-mok/server/internal/pkg/errors"
 	"github.com/status-mok/server/internal/pkg/log"
 	"go.uber.org/zap/zapcore"
-	"gopkg.in/yaml.v3"
 )
 
 type AppConfig struct {
-	LogLevelStr      string `mapstructure:"log_level" env:"MOK_LOG_LEVEL,default=debug"`
-	AdminAPIgrpcHost string `mapstructure:"admin_api_grpc_host" env:"MOK_ADMIN_API_GRPC_HOST"`
-	AdminAPIgrpcPort string `mapstructure:"admin_api_grpc_port" env:"MOK_ADMIN_API_GRPC_PORT,default=2001"`
-	AdminAPIhttpHost string `mapstructure:"admin_api_http_host" env:"MOK_ADMIN_API_HTTP_HOST"`
-	AdminAPIhttpPort string `mapstructure:"admin_api_http_port" env:"MOK_ADMIN_API_HTTP_PORT,default=2002"`
+	LogLevelStr string `mapstructure:"log_level" env:"MOK_LOG_LEVEL,default=debug"`
+	AdminAPI    struct {
+		GRPC struct {
+			Host string `mapstructure:"host" env:"MOK_ADMIN_API_GRPC_HOST"`
+			Port string `mapstructure:"port" env:"MOK_ADMIN_API_GRPC_PORT,default=2001"`
+		} `mapstructure:"grpc"`
+		HTTP struct {
+			Host string `mapstructure:"host" env:"MOK_ADMIN_API_HTTP_HOST"`
+			Port string `mapstructure:"port" env:"MOK_ADMIN_API_HTTP_PORT,default=2002"`
+		} `mapstructure:"http"`
+	} `mapstructure:"admin_api"`
 }
 
 func NewAppConfig(ctx context.Context, configPath string) (*AppConfig, error) {
@@ -28,13 +34,18 @@ func NewAppConfig(ctx context.Context, configPath string) (*AppConfig, error) {
 		return &conf, nil
 	}
 
-	f, err := os.ReadFile(configPath)
+	f, err := os.Open(configPath)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to open config file '%s'", configPath)
 	}
 
-	if err = yaml.Unmarshal(f, &conf); err != nil {
-		return nil, errors.Wrap(err, "failed to decode config yaml")
+	v := viper.New()
+	v.SetConfigType("yaml")
+	if err := v.ReadConfig(f); err != nil {
+		return nil, errors.Wrap(err, "failed to read config yaml file")
+	}
+	if err := v.Unmarshal(&conf); err != nil {
+		return nil, errors.Wrap(err, "failed to decode config yaml file")
 	}
 
 	return &conf, nil
@@ -50,9 +61,9 @@ func (conf AppConfig) LogLevel() zapcore.LevelEnabler {
 }
 
 func (conf AppConfig) AdminHTTPAddress() string {
-	return conf.AdminAPIhttpHost + ":" + conf.AdminAPIhttpPort
+	return conf.AdminAPI.HTTP.Host + ":" + conf.AdminAPI.HTTP.Port
 }
 
 func (conf AppConfig) AdminGRPCAddress() string {
-	return conf.AdminAPIgrpcHost + ":" + conf.AdminAPIgrpcPort
+	return conf.AdminAPI.GRPC.Host + ":" + conf.AdminAPI.GRPC.Port
 }
