@@ -141,7 +141,10 @@ message DeleteRequest {
 }
 
 message DeleteResponse {
-  bool success = 1 [json_name = "success"];
+  bool success = 1 [
+    json_name = "success",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
+  ];
 }
 
 message StartRequest {
@@ -166,7 +169,17 @@ message StartRequest {
 }
 
 message StartResponse {
-  bool success = 1 [json_name = "success"];
+  bool success = 1 [
+    json_name = "success",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
+  ];
+  string address = 2 [
+    json_name = "address",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"0.0.0.0:8080\""
+    }
+  ];
 }
 
 message StopRequest {
@@ -191,5 +204,8 @@ message StopRequest {
 }
 
 message StopResponse {
-  bool success = 1 [json_name = "success"];
+  bool success = 1 [
+    json_name = "success",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
+  ];
 }

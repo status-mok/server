@@ -636,6 +636,8 @@ func (m *StartResponse) validate(all bool) error {
 
 	// no validation rules for Success
 
+	// no validation rules for Address
+
 	if len(errors) > 0 {
 		return StartResponseMultiError(errors)
 	}
