@@ -209,6 +209,8 @@ func (m *CreateResponse) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Success
+
 	if len(errors) > 0 {
 		return CreateResponseMultiError(errors)
 	}
@@ -286,3 +288,426 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateResponseValidationError{}
+
+// Validate checks the field values on StartRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *StartRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on StartRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in StartRequestMultiError, or
+// nil if none found.
+func (m *StartRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *StartRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 100 {
+		err := StartRequestValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return StartRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// StartRequestMultiError is an error wrapping multiple validation errors
+// returned by StartRequest.ValidateAll() if the designated constraints aren't met.
+type StartRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m StartRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m StartRequestMultiError) AllErrors() []error { return m }
+
+// StartRequestValidationError is the validation error returned by
+// StartRequest.Validate if the designated constraints aren't met.
+type StartRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e StartRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e StartRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e StartRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e StartRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e StartRequestValidationError) ErrorName() string { return "StartRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e StartRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStartRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = StartRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = StartRequestValidationError{}
+
+// Validate checks the field values on StartResponse with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *StartResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on StartResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in StartResponseMultiError, or
+// nil if none found.
+func (m *StartResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *StartResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	if len(errors) > 0 {
+		return StartResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// StartResponseMultiError is an error wrapping multiple validation errors
+// returned by StartResponse.ValidateAll() if the designated constraints
+// aren't met.
+type StartResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m StartResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m StartResponseMultiError) AllErrors() []error { return m }
+
+// StartResponseValidationError is the validation error returned by
+// StartResponse.Validate if the designated constraints aren't met.
+type StartResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e StartResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e StartResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e StartResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e StartResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e StartResponseValidationError) ErrorName() string { return "StartResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e StartResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStartResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = StartResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = StartResponseValidationError{}
+
+// Validate checks the field values on StopRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *StopRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on StopRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in StopRequestMultiError, or
+// nil if none found.
+func (m *StopRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *StopRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 100 {
+		err := StopRequestValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return StopRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// StopRequestMultiError is an error wrapping multiple validation errors
+// returned by StopRequest.ValidateAll() if the designated constraints aren't met.
+type StopRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m StopRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m StopRequestMultiError) AllErrors() []error { return m }
+
+// StopRequestValidationError is the validation error returned by
+// StopRequest.Validate if the designated constraints aren't met.
+type StopRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e StopRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e StopRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e StopRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e StopRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e StopRequestValidationError) ErrorName() string { return "StopRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e StopRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStopRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = StopRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = StopRequestValidationError{}
+
+// Validate checks the field values on StopResponse with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *StopResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on StopResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in StopResponseMultiError, or
+// nil if none found.
+func (m *StopResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *StopResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	if len(errors) > 0 {
+		return StopResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// StopResponseMultiError is an error wrapping multiple validation errors
+// returned by StopResponse.ValidateAll() if the designated constraints aren't met.
+type StopResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m StopResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m StopResponseMultiError) AllErrors() []error { return m }
+
+// StopResponseValidationError is the validation error returned by
+// StopResponse.Validate if the designated constraints aren't met.
+type StopResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e StopResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e StopResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e StopResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e StopResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e StopResponseValidationError) ErrorName() string { return "StopResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e StopResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStopResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = StopResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = StopResponseValidationError{}

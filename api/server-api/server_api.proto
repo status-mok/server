@@ -9,12 +9,36 @@ import "validate/validate.proto";
 option go_package = "github.com/status-mok/server/pkg/server-api;server_api";
 
 service ServerService {
+  // Create
   rpc Create(CreateRequest) returns (CreateResponse) {
     option (google.api.http) = {
       post: "/server/create"
       body: "*"
     };
   }
+  // Start
+  rpc Start(StartRequest) returns (StartResponse) {
+    option (google.api.http) = {
+      post: "/server/start"
+      body: "*"
+    };
+  }
+  // Stop
+  rpc Stop(StopRequest) returns (StopResponse) {
+    option (google.api.http) = {
+      post: "/server/stop"
+      body: "*"
+    };
+  }
+}
+
+enum ServerType {
+  SERVER_TYPE_UNSPECIFIED = 0;
+  SERVER_TYPE_HTTP = 1;
+  SERVER_TYPE_GRPC = 2;
+  SERVER_TYPE_THRIFT = 3;
+  SERVER_TYPE_TCP = 4;
+  SERVER_TYPE_UDP = 5;
 }
 
 message CreateRequest {
@@ -28,7 +52,7 @@ message CreateRequest {
     }
   };
 
-  // Name is a unique identifier of server.
+  // Name is a unique identifier of the server.
   string name = 1 [
     json_name = "name",
     (validate.rules).string = {
@@ -66,29 +90,74 @@ message CreateRequest {
     }
   ];
   // The server type.
+  /*
+     1: HTTP
+     2: GRPC
+     3: Thrift
+     4: TCP
+     5: UDP
+  */
   ServerType type = 4 [
     json_name = "type",
     (validate.rules).enum.defined_only = true,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      enum: [
-        "SERVER_TYPE_UNSPECIFIED",
-        "SERVER_TYPE_HTTP",
-        "SERVER_TYPE_GRPC",
-        "SERVER_TYPE_THRIFT",
-        "SERVER_TYPE_TCP",
-        "SERVER_TYPE_UDP"
-      ]
+      minimum: 1,
+      maximum: 5,
+      example: "1"
     }
   ];
 }
 
-message CreateResponse {}
+message CreateResponse {
+  bool success = 1 [json_name = "success"];
+}
 
-enum ServerType {
-  SERVER_TYPE_UNSPECIFIED = 0;
-  SERVER_TYPE_HTTP = 1;
-  SERVER_TYPE_GRPC = 2;
-  SERVER_TYPE_THRIFT = 3;
-  SERVER_TYPE_TCP = 4;
-  SERVER_TYPE_UDP = 5;
+message StartRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: ["name"]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string name = 1 [
+    json_name = "name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+}
+
+message StartResponse {
+  bool success = 1 [json_name = "success"];
+}
+
+message StopRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: ["name"]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string name = 1 [
+    json_name = "name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+}
+
+message StopResponse {
+  bool success = 1 [json_name = "success"];
 }

@@ -18,6 +18,7 @@
   "paths": {
     "/server/create": {
       "post": {
+        "summary": "Create",
         "operationId": "ServerService_Create",
         "responses": {
           "200": {
@@ -41,6 +42,60 @@
           "ServerService"
         ]
       }
+    },
+    "/server/start": {
+      "post": {
+        "summary": "Start",
+        "operationId": "ServerService_Start",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/server_apiStartResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/server_apiStartRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ServerService"
+        ]
+      }
+    },
+    "/server/stop": {
+      "post": {
+        "summary": "Stop",
+        "operationId": "ServerService_Stop",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/server_apiStopResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/server_apiStopRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ServerService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -50,7 +105,7 @@
         "name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of server.",
+          "description": "Name is a unique identifier of the server.",
           "minLength": 1
         },
         "ip": {
@@ -63,20 +118,15 @@
           "type": "integer",
           "format": "int64",
           "example": 8080,
-          "description": "The server shall listen to this port.",
+          "description": "The server shall listen to this port.\n\nThe server type.",
           "maximum": 65535
         },
         "type": {
           "$ref": "#/definitions/server_apiServerType",
-          "enum": [
-            "SERVER_TYPE_UNSPECIFIED",
-            "SERVER_TYPE_HTTP",
-            "SERVER_TYPE_GRPC",
-            "SERVER_TYPE_THRIFT",
-            "SERVER_TYPE_TCP",
-            "SERVER_TYPE_UDP"
-          ],
-          "description": "The server type."
+          "example": 1,
+          "title": "1: HTTP\n2: GRPC\n3: Thrift\n4: TCP\n5: UDP",
+          "maximum": 5,
+          "minimum": 1
         }
       },
       "required": [
@@ -86,7 +136,12 @@
       ]
     },
     "server_apiCreateResponse": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
     },
     "server_apiServerType": {
       "type": "string",
@@ -99,6 +154,50 @@
         "SERVER_TYPE_UDP"
       ],
       "default": "SERVER_TYPE_UNSPECIFIED"
+    },
+    "server_apiStartRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "server_apiStartResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "server_apiStopRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "server_apiStopResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
     }
   }
 }
