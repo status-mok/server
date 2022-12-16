@@ -14,9 +14,8 @@ import (
 )
 
 var (
-	ErrAlreadyStarting = status.Error(codes.FailedPrecondition, "already starting")
-	ErrAlreadyRunning  = status.Error(codes.FailedPrecondition, "already running")
-	ErrAlreadyStopped  = status.Error(codes.FailedPrecondition, "already stopped")
+	ErrAlreadyRunning = status.Error(codes.FailedPrecondition, "already running")
+	ErrAlreadyStopped = status.Error(codes.FailedPrecondition, "already stopped")
 )
 
 type mokServer struct {
@@ -45,6 +44,10 @@ func NewServer(name, ip string, port uint32, serverType ServerType) *mokServer {
 }
 
 func (s *mokServer) Addr() string {
+	if s.listener != nil {
+		return s.listener.Addr().String()
+	}
+
 	return fmt.Sprintf("%s:%d", s.ip, s.port)
 }
 
@@ -62,11 +65,8 @@ func (s *mokServer) Start(ctx context.Context) (err error) {
 
 	if s.status == ServerStatusRunning {
 		return ErrAlreadyRunning
-	} else if s.status == ServerStatusStarting {
-		return ErrAlreadyStarting
 	}
 
-	s.status = ServerStatusStarting
 	defer func() {
 		if err != nil {
 			s.status = ServerStatusStopped
@@ -81,7 +81,7 @@ func (s *mokServer) Start(ctx context.Context) (err error) {
 			ErrorLog: log.StdLogger(ctx),
 		}
 
-		l, err := net.Listen("tcp", s.Addr())
+		s.listener, err = net.Listen("tcp", s.Addr())
 		if err != nil {
 			return errors.Wrapf(err, "failed to start tcp listening to '%s'", s.Addr())
 		}
@@ -91,7 +91,7 @@ func (s *mokServer) Start(ctx context.Context) (err error) {
 			s.status = ServerStatusRunning
 			s.mu.Unlock()
 
-			if errS := s.httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
+			if errS := s.httpServer.Serve(s.listener); err != nil && err != http.ErrServerClosed {
 				log.L(ctx).With("error", errS).Errorf("http server at '%s' stopped with error: '%s'", s.Addr(), errS)
 			}
 
@@ -99,8 +99,6 @@ func (s *mokServer) Start(ctx context.Context) (err error) {
 			s.status = ServerStatusStopped
 			s.mu.Unlock()
 		}()
-
-		return nil
 	} else {
 
 	}

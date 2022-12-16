@@ -10,15 +10,13 @@ type ServerStatus int32
 
 const (
 	ServerStatusStopped = iota
-	ServerStatusStarting
 	ServerStatusRunning
 )
 
 var (
 	ServerStatusAllowed = map[ServerStatus]struct{}{
-		ServerStatusStopped:  {},
-		ServerStatusStarting: {},
-		ServerStatusRunning:  {},
+		ServerStatusStopped: {},
+		ServerStatusRunning: {},
 	}
 )
 
