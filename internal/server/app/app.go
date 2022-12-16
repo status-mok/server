@@ -13,10 +13,13 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/status-mok/server/internal/mok"
+	"github.com/status-mok/server/internal/pkg/docs"
 	"github.com/status-mok/server/internal/pkg/errors"
 	"github.com/status-mok/server/internal/pkg/log"
+	grpcMiddleware "github.com/status-mok/server/internal/pkg/middleware/grpc"
 	"github.com/status-mok/server/internal/server/config"
-	"github.com/status-mok/server/internal/server/docs"
+	"github.com/status-mok/server/internal/server/service/server"
 	serverAPI "github.com/status-mok/server/pkg/server-api"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -68,7 +71,9 @@ func (app *app) Start(ctx context.Context, configPath string) error {
 }
 
 func (app *app) initServices(_ context.Context) {
-	app.serverService = new(serverAPI.UnimplementedServerServiceServer)
+	storage := mok.NewStorage()
+
+	app.serverService = server.NewServerService(storage)
 }
 
 func (app *app) startHTTPServer(ctx context.Context) error {
@@ -80,14 +85,18 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 	mux.Use(middleware.Recoverer)
 
 	mux.Mount("/metrics", promhttp.Handler())
-	mux.Mount("/docs", docs.Handler())
+
+	serviceDocs := []docs.ServiceDoc{
+		{"server-api", serverAPI.SwaggerJSON},
+	}
+	mux.Mount("/docs", docs.NewServiceDocsHandler(serviceDocs...))
 
 	gwMux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	if err := serverAPI.RegisterServerServiceHandlerFromEndpoint(ctx, gwMux, app.conf.AdminGRPCAddress(), opts); err != nil {
 		return err
 	}
-	mux.Handle("/", gwMux)
+	mux.Mount("/", gwMux)
 
 	srv := http.Server{
 		Addr:     app.conf.AdminHTTPAddress(),
@@ -121,7 +130,9 @@ func (app *app) startGRPCServer(ctx context.Context) error {
 		log.L(ctx).Fatalf("failed to init tcp listener: '%v'", err)
 	}
 
-	var opts []grpc.ServerOption
+	opts := []grpc.ServerOption{
+		grpc.UnaryInterceptor(grpcMiddleware.NewErrorUnaryInterceptor()),
+	}
 	grpcServer := grpc.NewServer(opts...)
 	serverAPI.RegisterServerServiceServer(grpcServer, app.serverService)
 

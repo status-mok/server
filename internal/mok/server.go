@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/status-mok/server/internal/pkg/errors"
 	"github.com/status-mok/server/internal/pkg/log"
 )
 
@@ -17,6 +18,8 @@ type mokServer struct {
 
 	listener   net.Listener
 	httpServer *http.Server
+
+	status ServerStatus
 }
 
 func NewServer(name, ip string, port uint32, serverType ServerType) *mokServer {
@@ -39,14 +42,20 @@ func (s *mokServer) Name() string {
 func (s *mokServer) Start(ctx context.Context) error {
 	if s._type == ServerTypeHTTP {
 		s.httpServer = &http.Server{
-			Addr:     s.Addr(),
-			Handler:  s.httpHandler(),
+			Handler:  s.httpHandler(ctx),
 			ErrorLog: log.StdLogger(ctx),
 		}
 
-		if err := s.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			return err
+		l, err := net.Listen("tcp", s.Addr())
+		if err != nil {
+			return errors.Wrapf(err, "failed to start listening to '%s'", s.Addr())
 		}
+
+		go func() {
+			if errS := s.httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
+				log.L(ctx).With("error", errS).Errorf("http server at '%s' stopped with error: '%s'", s.Addr(), errS)
+			}
+		}()
 
 		return nil
 	} else {
