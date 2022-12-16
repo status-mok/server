@@ -17,7 +17,7 @@ var (
 type Storage struct {
 	servers map[string]*mokServer
 
-	mu sync.Mutex
+	mu sync.RWMutex
 }
 
 func NewStorage() *Storage {
@@ -27,8 +27,8 @@ func NewStorage() *Storage {
 }
 
 func (m *Storage) ServerGet(_ context.Context, name string) (*mokServer, error) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
+	m.mu.RLock()
+	defer m.mu.RUnlock()
 
 	s, ok := m.servers[name]
 	if !ok {
@@ -51,6 +51,19 @@ func (m *Storage) ServerCreate(ctx context.Context, srv *mokServer) error {
 	defer m.mu.Unlock()
 
 	m.servers[srv.Name()] = srv
+
+	return nil
+}
+
+func (m *Storage) ServerDelete(ctx context.Context, name string) error {
+	if _, err := m.ServerGet(ctx, name); err != nil {
+		return err
+	}
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	delete(m.servers, name)
 
 	return nil
 }

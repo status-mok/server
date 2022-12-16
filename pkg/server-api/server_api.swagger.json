@@ -43,6 +43,33 @@
         ]
       }
     },
+    "/server/delete": {
+      "post": {
+        "summary": "Delete",
+        "operationId": "ServerService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/server_apiDeleteResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/server_apiDeleteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ServerService"
+        ]
+      }
+    },
     "/server/start": {
       "post": {
         "summary": "Start",
@@ -136,6 +163,28 @@
       ]
     },
     "server_apiCreateResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "server_apiDeleteRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "server_apiDeleteResponse": {
       "type": "object",
       "properties": {
         "success": {

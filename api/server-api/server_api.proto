@@ -16,6 +16,13 @@ service ServerService {
       body: "*"
     };
   }
+  // Delete
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      post: "/server/delete"
+      body: "*"
+    };
+  }
   // Start
   rpc Start(StartRequest) returns (StartResponse) {
     option (google.api.http) = {
@@ -109,6 +116,31 @@ message CreateRequest {
 }
 
 message CreateResponse {
+  bool success = 1 [json_name = "success"];
+}
+
+message DeleteRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: ["name"]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string name = 1 [
+    json_name = "name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+}
+
+message DeleteResponse {
   bool success = 1 [json_name = "success"];
 }
 

@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type ServerServiceClient interface {
 	// Create
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	// Delete
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	// Start
 	Start(ctx context.Context, in *StartRequest, opts ...grpc.CallOption) (*StartResponse, error)
 	// Stop
@@ -41,6 +43,15 @@ func NewServerServiceClient(cc grpc.ClientConnInterface) ServerServiceClient {
 func (c *serverServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
 	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Create", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serverServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
+	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -71,6 +82,8 @@ func (c *serverServiceClient) Stop(ctx context.Context, in *StopRequest, opts ..
 type ServerServiceServer interface {
 	// Create
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	// Delete
+	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	// Start
 	Start(context.Context, *StartRequest) (*StartResponse, error)
 	// Stop
@@ -84,6 +97,9 @@ type UnimplementedServerServiceServer struct {
 
 func (UnimplementedServerServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedServerServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedServerServiceServer) Start(context.Context, *StartRequest) (*StartResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Start not implemented")
@@ -118,6 +134,24 @@ func _ServerService_Create_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerServiceServer).Create(ctx, req.(*CreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/statusmok.server.server_api.ServerService/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerServiceServer).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -168,6 +202,10 @@ var ServerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _ServerService_Create_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _ServerService_Delete_Handler,
 		},
 		{
 			MethodName: "Start",

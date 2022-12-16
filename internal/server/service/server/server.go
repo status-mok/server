@@ -40,6 +40,14 @@ func (s serverService) Create(ctx context.Context, req *serverAPI.CreateRequest)
 	return &serverAPI.CreateResponse{Success: true}, nil
 }
 
+func (s serverService) Delete(ctx context.Context, req *serverAPI.DeleteRequest) (*serverAPI.DeleteResponse, error) {
+	if err := s.storage.ServerDelete(ctx, req.GetName()); err != nil {
+		return nil, errors.Wrapf(err, "failed to delete server '%s'", req.GetName())
+	}
+
+	return &serverAPI.DeleteResponse{Success: true}, nil
+}
+
 func (s serverService) Start(ctx context.Context, req *serverAPI.StartRequest) (*serverAPI.StartResponse, error) {
 	srv, err := s.storage.ServerGet(ctx, req.GetName())
 	if err != nil {
