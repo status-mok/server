@@ -150,10 +150,7 @@
         },
         "type": {
           "$ref": "#/definitions/ServerServiceServerType",
-          "example": 1,
-          "title": "1: HTTP\n2: GRPC\n3: Thrift\n4: TCP\n5: UDP",
-          "maximum": 5,
-          "minimum": 1
+          "title": "1: HTTP\n2: GRPC\n3: Thrift\n4: TCP\n5: UDP"
         }
       },
       "required": [

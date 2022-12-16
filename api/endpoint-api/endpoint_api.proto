@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package statusmok.server.EndpointService;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/status-mok/server/pkg/endpoint-api;endpoint_api";
+
+service EndpointService {
+  // Create
+  rpc Create(CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/endpoint/create"
+      body: "*"
+    };
+  }
+  // Delete
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      post: "/endpoint/delete"
+      body: "*"
+    };
+  }
+}
+
+enum EndpointType {
+  ENDPOINT_TYPE_UNSPECIFIED = 0;
+  ENDPOINT_TYPE_REQ_RESP = 1;
+  ENDPOINT_TYPE_WEBSOCKET = 2;
+}
+
+message CreateRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: [
+        "server_name",
+        "url",
+        "type"
+      ]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string server_name = 1 [
+    json_name = "server_name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+  // URL is a relative URI of the endpoint.
+  string url = 2 [
+    json_name = "url",
+    (validate.rules).string.uri_ref = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"/some-url\""
+    }
+  ];
+  // The endpoint type.
+  /*
+     1: ReqResp
+     2: WebSocket
+  */
+  EndpointType type = 3 [
+    json_name = "type",
+    (validate.rules).enum.defined_only = true
+  ];
+}
+
+message CreateResponse {
+  bool success = 1 [json_name = "success"];
+}
+
+message DeleteRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: [
+        "server_name",
+        "url"
+      ]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string server_name = 1 [
+    json_name = "server_name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+  // URL is a relative URI of the endpoint.
+  string url = 2 [
+    json_name = "url",
+    (validate.rules).string.uri_ref = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"/some-url\""
+    }
+  ];
+}
+
+message DeleteResponse {
+  bool success = 1 [
+    json_name = "success",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
+  ];
+}

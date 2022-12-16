@@ -1,0 +1,148 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "expectation-api/expectation_api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ExpectationService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/expectation/create": {
+      "post": {
+        "summary": "Create",
+        "operationId": "ExpectationService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ExpectationServiceCreateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExpectationServiceCreateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ExpectationService"
+        ]
+      }
+    },
+    "/expectation/delete": {
+      "post": {
+        "summary": "Delete",
+        "operationId": "ExpectationService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ExpectationServiceDeleteResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExpectationServiceDeleteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ExpectationService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ExpectationServiceCreateRequest": {
+      "type": "object",
+      "properties": {
+        "server_name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        },
+        "endpoint_url": {
+          "type": "string",
+          "example": "/some-url",
+          "description": "URL is a relative URI of the endpoint.",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "example": "95423706-1d7c-431b-b182-3b95eb63310b",
+          "description": "ID is a unique identifier of expectation.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "server_name",
+        "endpoint_url"
+      ]
+    },
+    "ExpectationServiceCreateResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ExpectationServiceDeleteRequest": {
+      "type": "object",
+      "properties": {
+        "server_name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        },
+        "endpoint_url": {
+          "type": "string",
+          "example": "/some-url",
+          "description": "URL is a relative URI of the endpoint.",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "example": "95423706-1d7c-431b-b182-3b95eb63310b",
+          "description": "ID is a unique identifier of expectation.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "server_name",
+        "endpoint_url",
+        "id"
+      ]
+    },
+    "ExpectationServiceDeleteResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    }
+  }
+}

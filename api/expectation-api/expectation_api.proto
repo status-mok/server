@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package statusmok.server.ExpectationService;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/status-mok/server/pkg/expectation-api;expectation_api";
+
+service ExpectationService {
+  // Create
+  rpc Create(CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/expectation/create"
+      body: "*"
+    };
+  }
+  // Delete
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      post: "/expectation/delete"
+      body: "*"
+    };
+  }
+}
+
+message CreateRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: [
+        "server_name",
+        "endpoint_url"
+      ]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string server_name = 1 [
+    json_name = "server_name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+  // URL is a relative URI of the endpoint.
+  string endpoint_url = 2 [
+    json_name = "endpoint_url",
+    (validate.rules).string.uri_ref = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"/some-url\""
+    }
+  ];
+  // ID is a unique identifier of expectation.
+  optional string id = 3 [
+    json_name = "id",
+    (validate.rules).string = {
+      ignore_empty: true,
+      min_len: 1
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"95423706-1d7c-431b-b182-3b95eb63310b\""
+    }
+  ];
+}
+
+message CreateResponse {
+  bool success = 1 [json_name = "success"];
+}
+
+message DeleteRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: [
+        "server_name",
+        "endpoint_url",
+        "id"
+      ]
+    }
+  };
+
+  // Name is a unique identifier of the server.
+  string server_name = 1 [
+    json_name = "server_name",
+    (validate.rules).string = {
+      min_len: 1,
+      max_len: 100
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"http-server-8080\""
+    }
+  ];
+  // URL is a relative URI of the endpoint.
+  string endpoint_url = 2 [
+    json_name = "endpoint_url",
+    (validate.rules).string.uri_ref = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"/some-url\""
+    }
+  ];
+  // ID is a unique identifier of expectation.
+  optional string id = 3 [
+    json_name = "id",
+    (validate.rules).string = {
+      ignore_empty: true,
+      min_len: 1
+    },
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      min_length: 1,
+      example: "\"95423706-1d7c-431b-b182-3b95eb63310b\""
+    }
+  ];
+}
+
+message DeleteResponse {
+  bool success = 1 [
+    json_name = "success",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
+  ];
+}

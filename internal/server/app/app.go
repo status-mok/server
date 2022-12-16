@@ -20,6 +20,8 @@ import (
 	grpcMiddleware "github.com/status-mok/server/internal/pkg/middleware/grpc"
 	"github.com/status-mok/server/internal/server/config"
 	"github.com/status-mok/server/internal/server/service/server"
+	endpointAPI "github.com/status-mok/server/pkg/endpoint-api"
+	expectationAPI "github.com/status-mok/server/pkg/expectation-api"
 	serverAPI "github.com/status-mok/server/pkg/server-api"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -88,6 +90,8 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 
 	serviceDocs := []docs.ServiceDoc{
 		{"server-api", serverAPI.SwaggerJSON},
+		{"endpoint-api", endpointAPI.SwaggerJSON},
+		{"expectation-api", expectationAPI.SwaggerJSON},
 	}
 	mux.Mount("/docs", docs.NewServiceDocsHandler(serviceDocs...))
 

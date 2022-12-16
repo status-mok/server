@@ -106,12 +106,7 @@ message CreateRequest {
   */
   ServerType type = 4 [
     json_name = "type",
-    (validate.rules).enum.defined_only = true,
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      minimum: 1,
-      maximum: 5,
-      example: "1"
-    }
+    (validate.rules).enum.defined_only = true
   ];
 }
 

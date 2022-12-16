@@ -1,0 +1,149 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "endpoint-api/endpoint_api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "EndpointService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/endpoint/create": {
+      "post": {
+        "summary": "Create",
+        "operationId": "EndpointService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/EndpointServiceCreateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EndpointServiceCreateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "EndpointService"
+        ]
+      }
+    },
+    "/endpoint/delete": {
+      "post": {
+        "summary": "Delete",
+        "operationId": "EndpointService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/EndpointServiceDeleteResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EndpointServiceDeleteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "EndpointService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "EndpointServiceCreateRequest": {
+      "type": "object",
+      "properties": {
+        "server_name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "example": "/some-url",
+          "description": "URL is a relative URI of the endpoint.\n\nThe endpoint type.",
+          "minLength": 1
+        },
+        "type": {
+          "$ref": "#/definitions/EndpointServiceEndpointType",
+          "title": "1: ReqResp\n2: WebSocket"
+        }
+      },
+      "required": [
+        "server_name",
+        "url",
+        "type"
+      ]
+    },
+    "EndpointServiceCreateResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EndpointServiceDeleteRequest": {
+      "type": "object",
+      "properties": {
+        "server_name": {
+          "type": "string",
+          "example": "http-server-8080",
+          "description": "Name is a unique identifier of the server.",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "example": "/some-url",
+          "description": "URL is a relative URI of the endpoint.",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "server_name",
+        "url"
+      ]
+    },
+    "EndpointServiceDeleteResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "EndpointServiceEndpointType": {
+      "type": "string",
+      "enum": [
+        "ENDPOINT_TYPE_UNSPECIFIED",
+        "ENDPOINT_TYPE_REQ_RESP",
+        "ENDPOINT_TYPE_WEBSOCKET"
+      ],
+      "default": "ENDPOINT_TYPE_UNSPECIFIED"
+    }
+  }
+}
