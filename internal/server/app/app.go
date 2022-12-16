@@ -19,6 +19,8 @@ import (
 	"github.com/status-mok/server/internal/pkg/log"
 	grpcMiddleware "github.com/status-mok/server/internal/pkg/middleware/grpc"
 	"github.com/status-mok/server/internal/server/config"
+	"github.com/status-mok/server/internal/server/service/endpoint"
+	"github.com/status-mok/server/internal/server/service/expectation"
 	"github.com/status-mok/server/internal/server/service/server"
 	endpointAPI "github.com/status-mok/server/pkg/endpoint-api"
 	expectationAPI "github.com/status-mok/server/pkg/expectation-api"
@@ -29,10 +31,14 @@ import (
 )
 
 type app struct {
-	serverService serverAPI.ServerServiceServer
+	serverService      serverAPI.ServerServiceServer
+	endpointService    endpointAPI.EndpointServiceServer
+	expectationService expectationAPI.ExpectationServiceServer
 
 	conf *config.AppConfig
 }
+
+type grpcGatewayRegister func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error
 
 func NewApp() *app {
 	return &app{}
@@ -76,6 +82,8 @@ func (app *app) initServices(_ context.Context) {
 	storage := mok.NewServerStorage()
 
 	app.serverService = server.NewServerService(storage)
+	app.endpointService = endpoint.NewEndpointService(storage)
+	app.expectationService = expectation.NewExpectationService(storage)
 }
 
 func (app *app) startHTTPServer(ctx context.Context) error {
@@ -96,11 +104,19 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 	mux.Mount("/docs", docs.NewServiceDocsHandler(serviceDocs...))
 
 	gwMux := runtime.NewServeMux()
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	if err := serverAPI.RegisterServerServiceHandlerFromEndpoint(ctx, gwMux, app.conf.AdminGRPCAddress(), opts); err != nil {
-		return err
-	}
 	mux.Mount("/", gwMux)
+
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	serviceRegisters := []grpcGatewayRegister{
+		serverAPI.RegisterServerServiceHandlerFromEndpoint,
+		endpointAPI.RegisterEndpointServiceHandlerFromEndpoint,
+		expectationAPI.RegisterExpectationServiceHandlerFromEndpoint,
+	}
+	for _, registerFn := range serviceRegisters {
+		if err := registerFn(ctx, gwMux, app.conf.AdminGRPCAddress(), opts); err != nil {
+			return err
+		}
+	}
 
 	srv := http.Server{
 		Addr:     app.conf.AdminHTTPAddress(),
@@ -139,6 +155,8 @@ func (app *app) startGRPCServer(ctx context.Context) error {
 	}
 	grpcServer := grpc.NewServer(opts...)
 	serverAPI.RegisterServerServiceServer(grpcServer, app.serverService)
+	endpointAPI.RegisterEndpointServiceServer(grpcServer, app.endpointService)
+	expectationAPI.RegisterExpectationServiceServer(grpcServer, app.expectationService)
 
 	go func() {
 		blockUntilExitSignalOrCtxTermination(ctx)

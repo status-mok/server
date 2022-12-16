@@ -11,7 +11,7 @@ import (
 
 func Test_endpointStorage_ServerGet(t *testing.T) {
 	ctx := context.Background()
-	sampleEndpoint := NewEndpoint("sample")
+	sampleEndpoint := NewEndpoint("sample", EndpointTypeReqResp)
 
 	testCases := []struct {
 		name        string
@@ -55,7 +55,7 @@ func Test_endpointStorage_ServerGet(t *testing.T) {
 
 func Test_endpointStorage_ServerCreate(t *testing.T) {
 	ctx := context.Background()
-	sampleEndpoint := NewEndpoint("sample")
+	sampleEndpoint := NewEndpoint("sample", EndpointTypeReqResp)
 
 	testCases := []struct {
 		name        string
@@ -101,7 +101,7 @@ func Test_endpointStorage_ServerCreate(t *testing.T) {
 
 func Test_endpointStorage_ServerDelete(t *testing.T) {
 	ctx := context.Background()
-	sampleEndpoint := NewEndpoint("sample")
+	sampleEndpoint := NewEndpoint("sample", EndpointTypeReqResp)
 
 	testCases := []struct {
 		name        string
@@ -150,7 +150,7 @@ func testEndpointStorage(n int, endpoints ...Endpoint) *endpointStorage {
 
 	for i := 0; i < n; i++ {
 		url := fmt.Sprint(i)
-		s.storage[url] = NewEndpoint(url)
+		s.storage[url] = NewEndpoint(url, EndpointTypeReqResp)
 	}
 
 	return s

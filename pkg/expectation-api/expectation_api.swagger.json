@@ -119,13 +119,13 @@
         "endpoint_url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of the endpoint.",
+          "description": "URL is a relative URI of an endpoint.",
           "minLength": 1
         },
         "id": {
           "type": "string",
           "example": "95423706-1d7c-431b-b182-3b95eb63310b",
-          "description": "ID is a unique identifier of expectation.",
+          "description": "ID is a unique identifier of an expectation.",
           "minLength": 1
         }
       },

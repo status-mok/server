@@ -97,7 +97,7 @@ message DeleteRequest {
       example: "\"http-server-8080\""
     }
   ];
-  // URL is a relative URI of the endpoint.
+  // URL is a relative URI of an endpoint.
   string endpoint_url = 2 [
     json_name = "endpoint_url",
     (validate.rules).string.uri_ref = true,
@@ -106,13 +106,10 @@ message DeleteRequest {
       example: "\"/some-url\""
     }
   ];
-  // ID is a unique identifier of expectation.
-  optional string id = 3 [
+  // ID is a unique identifier of an expectation.
+  string id = 3 [
     json_name = "id",
-    (validate.rules).string = {
-      ignore_empty: true,
-      min_len: 1
-    },
+    (validate.rules).string = {min_len: 1},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,
       example: "\"95423706-1d7c-431b-b182-3b95eb63310b\""

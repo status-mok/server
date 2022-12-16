@@ -324,23 +324,15 @@ func (m *DeleteRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.Id != nil {
-
-		if m.GetId() != "" {
-
-			if utf8.RuneCountInString(m.GetId()) < 1 {
-				err := DeleteRequestValidationError{
-					field:  "Id",
-					reason: "value length must be at least 1 runes",
-				}
-				if !all {
-					return err
-				}
-				errors = append(errors, err)
-			}
-
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		err := DeleteRequestValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
 		}
-
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {

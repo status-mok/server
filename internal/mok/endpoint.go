@@ -13,7 +13,7 @@ type Endpoint interface {
 }
 
 type endpoint struct {
-	expectationStorage
+	*expectationStorage
 
 	url   string       `mapstructure:"url"`
 	_type EndpointType `mapstructure:"type"`
@@ -23,9 +23,12 @@ type endpoint struct {
 	mu sync.Mutex
 }
 
-func NewEndpoint(url string) *endpoint {
+func NewEndpoint(url string, _type EndpointType) *endpoint {
 	return &endpoint{
-		url: url,
+		expectationStorage: NewExpectationStorage(),
+
+		url:   url,
+		_type: _type,
 	}
 }
 
