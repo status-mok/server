@@ -9,6 +9,7 @@ import (
 var (
 	Wrap   = errors.Wrap
 	Wrapf  = errors.Wrapf
+	Cause  = errors.Cause
 	Unwrap = stderr.Unwrap
 	New    = stderr.New
 	Is     = stderr.Is
