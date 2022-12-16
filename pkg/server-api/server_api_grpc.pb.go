@@ -42,7 +42,7 @@ func NewServerServiceClient(cc grpc.ClientConnInterface) ServerServiceClient {
 
 func (c *serverServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/statusmok.server.ServerService.ServerService/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *serverServiceClient) Create(ctx context.Context, in *CreateRequest, opt
 
 func (c *serverServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/statusmok.server.ServerService.ServerService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (c *serverServiceClient) Delete(ctx context.Context, in *DeleteRequest, opt
 
 func (c *serverServiceClient) Start(ctx context.Context, in *StartRequest, opts ...grpc.CallOption) (*StartResponse, error) {
 	out := new(StartResponse)
-	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Start", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/statusmok.server.ServerService.ServerService/Start", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (c *serverServiceClient) Start(ctx context.Context, in *StartRequest, opts 
 
 func (c *serverServiceClient) Stop(ctx context.Context, in *StopRequest, opts ...grpc.CallOption) (*StopResponse, error) {
 	out := new(StopResponse)
-	err := c.cc.Invoke(ctx, "/statusmok.server.server_api.ServerService/Stop", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/statusmok.server.ServerService.ServerService/Stop", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func _ServerService_Create_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/statusmok.server.server_api.ServerService/Create",
+		FullMethod: "/statusmok.server.ServerService.ServerService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerServiceServer).Create(ctx, req.(*CreateRequest))
@@ -148,7 +148,7 @@ func _ServerService_Delete_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/statusmok.server.server_api.ServerService/Delete",
+		FullMethod: "/statusmok.server.ServerService.ServerService/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerServiceServer).Delete(ctx, req.(*DeleteRequest))
@@ -166,7 +166,7 @@ func _ServerService_Start_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/statusmok.server.server_api.ServerService/Start",
+		FullMethod: "/statusmok.server.ServerService.ServerService/Start",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerServiceServer).Start(ctx, req.(*StartRequest))
@@ -184,7 +184,7 @@ func _ServerService_Stop_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/statusmok.server.server_api.ServerService/Stop",
+		FullMethod: "/statusmok.server.ServerService.ServerService/Stop",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerServiceServer).Stop(ctx, req.(*StopRequest))
@@ -196,7 +196,7 @@ func _ServerService_Stop_Handler(srv interface{}, ctx context.Context, dec func(
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ServerService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "statusmok.server.server_api.ServerService",
+	ServiceName: "statusmok.server.ServerService.ServerService",
 	HandlerType: (*ServerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

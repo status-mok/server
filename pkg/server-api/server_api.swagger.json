@@ -24,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/server_apiCreateResponse"
+              "$ref": "#/definitions/ServerServiceCreateResponse"
             }
           }
         },
@@ -34,7 +34,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/server_apiCreateRequest"
+              "$ref": "#/definitions/ServerServiceCreateRequest"
             }
           }
         ],
@@ -51,7 +51,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/server_apiDeleteResponse"
+              "$ref": "#/definitions/ServerServiceDeleteResponse"
             }
           }
         },
@@ -61,7 +61,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/server_apiDeleteRequest"
+              "$ref": "#/definitions/ServerServiceDeleteRequest"
             }
           }
         ],
@@ -78,7 +78,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/server_apiStartResponse"
+              "$ref": "#/definitions/ServerServiceStartResponse"
             }
           }
         },
@@ -88,7 +88,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/server_apiStartRequest"
+              "$ref": "#/definitions/ServerServiceStartRequest"
             }
           }
         ],
@@ -105,7 +105,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/server_apiStopResponse"
+              "$ref": "#/definitions/ServerServiceStopResponse"
             }
           }
         },
@@ -115,7 +115,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/server_apiStopRequest"
+              "$ref": "#/definitions/ServerServiceStopRequest"
             }
           }
         ],
@@ -126,7 +126,7 @@
     }
   },
   "definitions": {
-    "server_apiCreateRequest": {
+    "ServerServiceCreateRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -149,7 +149,7 @@
           "maximum": 65535
         },
         "type": {
-          "$ref": "#/definitions/server_apiServerType",
+          "$ref": "#/definitions/ServerServiceServerType",
           "example": 1,
           "title": "1: HTTP\n2: GRPC\n3: Thrift\n4: TCP\n5: UDP",
           "maximum": 5,
@@ -162,7 +162,7 @@
         "type"
       ]
     },
-    "server_apiCreateResponse": {
+    "ServerServiceCreateResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -170,7 +170,7 @@
         }
       }
     },
-    "server_apiDeleteRequest": {
+    "ServerServiceDeleteRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -184,7 +184,7 @@
         "name"
       ]
     },
-    "server_apiDeleteResponse": {
+    "ServerServiceDeleteResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -192,7 +192,7 @@
         }
       }
     },
-    "server_apiServerType": {
+    "ServerServiceServerType": {
       "type": "string",
       "enum": [
         "SERVER_TYPE_UNSPECIFIED",
@@ -204,7 +204,7 @@
       ],
       "default": "SERVER_TYPE_UNSPECIFIED"
     },
-    "server_apiStartRequest": {
+    "ServerServiceStartRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -218,7 +218,7 @@
         "name"
       ]
     },
-    "server_apiStartResponse": {
+    "ServerServiceStartResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -226,7 +226,7 @@
         }
       }
     },
-    "server_apiStopRequest": {
+    "ServerServiceStopRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -240,7 +240,7 @@
         "name"
       ]
     },
-    "server_apiStopResponse": {
+    "ServerServiceStopResponse": {
       "type": "object",
       "properties": {
         "success": {

@@ -181,7 +181,7 @@ func RegisterServerServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Create", runtime.WithHTTPPathPattern("/server/create"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Create", runtime.WithHTTPPathPattern("/server/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -206,7 +206,7 @@ func RegisterServerServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Delete", runtime.WithHTTPPathPattern("/server/delete"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Delete", runtime.WithHTTPPathPattern("/server/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -231,7 +231,7 @@ func RegisterServerServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Start", runtime.WithHTTPPathPattern("/server/start"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Start", runtime.WithHTTPPathPattern("/server/start"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -256,7 +256,7 @@ func RegisterServerServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Stop", runtime.WithHTTPPathPattern("/server/stop"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Stop", runtime.WithHTTPPathPattern("/server/stop"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -320,7 +320,7 @@ func RegisterServerServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Create", runtime.WithHTTPPathPattern("/server/create"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Create", runtime.WithHTTPPathPattern("/server/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -342,7 +342,7 @@ func RegisterServerServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Delete", runtime.WithHTTPPathPattern("/server/delete"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Delete", runtime.WithHTTPPathPattern("/server/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -364,7 +364,7 @@ func RegisterServerServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Start", runtime.WithHTTPPathPattern("/server/start"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Start", runtime.WithHTTPPathPattern("/server/start"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -386,7 +386,7 @@ func RegisterServerServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.server_api.ServerService/Stop", runtime.WithHTTPPathPattern("/server/stop"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/statusmok.server.ServerService.ServerService/Stop", runtime.WithHTTPPathPattern("/server/stop"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

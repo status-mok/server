@@ -9,6 +9,7 @@ lint:
   except:
     - PACKAGE_VERSION_SUFFIX
     - PACKAGE_DIRECTORY_MATCH
+    - PACKAGE_LOWER_SNAKE_CASE
   ignore:
     - google
 breaking:

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package statusmok.server.server_api;
+package statusmok.server.ServerService;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
