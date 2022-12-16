@@ -5,6 +5,6 @@ type ServerMock interface {
 	Server
 }
 
-type StorageMock interface {
-	Storage
+type ServerStorageMock interface {
+	ServerStorage
 }

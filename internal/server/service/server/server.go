@@ -9,12 +9,12 @@ import (
 )
 
 type serverService struct {
-	storage mok.Storage
+	storage mok.ServerStorage
 
 	serverAPI.UnimplementedServerServiceServer
 }
 
-func NewServerService(storage mok.Storage) *serverService {
+func NewServerService(storage mok.ServerStorage) *serverService {
 	return &serverService{
 		storage: storage,
 	}

@@ -19,6 +19,8 @@ var (
 )
 
 type Server interface {
+	EndpointStorage
+
 	Addr() string
 	Name() string
 	Status() ServerStatus
@@ -28,6 +30,8 @@ type Server interface {
 }
 
 type server struct {
+	endpointStorage
+
 	name  string     `mapstructure:"name"`
 	ip    string     `mapstructure:"ip"`
 	port  uint32     `mapstructure:"port"`

@@ -71,7 +71,7 @@ func (app *app) Run(ctx context.Context, configPath string) error {
 }
 
 func (app *app) initServices(_ context.Context) {
-	storage := mok.NewStorage()
+	storage := mok.NewServerStorage()
 
 	app.serverService = server.NewServerService(storage)
 }

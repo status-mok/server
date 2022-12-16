@@ -18,7 +18,7 @@ func Test_serverService_Create(t *testing.T) {
 	type testCase struct {
 		name        string
 		req         *serverAPI.CreateRequest
-		setupMocks  func(t *testing.T, tc *testCase) *mocks.StorageMock
+		setupMocks  func(t *testing.T, tc *testCase) *mocks.ServerStorageMock
 		expErrorMsg string
 	}
 
@@ -29,8 +29,8 @@ func Test_serverService_Create(t *testing.T) {
 				Name: "sample",
 				Type: 1,
 			},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock := mocks.NewStorageMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock := mocks.NewServerStorageMock(t)
 
 				storageMock.
 					On(
@@ -55,8 +55,8 @@ func Test_serverService_Create(t *testing.T) {
 				Name: "sample",
 				Type: 1,
 			},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock := mocks.NewStorageMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock := mocks.NewServerStorageMock(t)
 
 				storageMock.
 					On(
@@ -109,7 +109,7 @@ func Test_serverService_Delete(t *testing.T) {
 	type testCase struct {
 		name        string
 		req         *serverAPI.DeleteRequest
-		setupMocks  func(t *testing.T, tc *testCase) *mocks.StorageMock
+		setupMocks  func(t *testing.T, tc *testCase) *mocks.ServerStorageMock
 		expErrorMsg string
 	}
 
@@ -117,8 +117,8 @@ func Test_serverService_Delete(t *testing.T) {
 		{
 			name: "ok",
 			req:  &serverAPI.DeleteRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock := mocks.NewStorageMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock := mocks.NewServerStorageMock(t)
 
 				storageMock.
 					On("ServerDelete", mock.Anything, tc.req.GetName()).
@@ -131,8 +131,8 @@ func Test_serverService_Delete(t *testing.T) {
 		{
 			name: "error",
 			req:  &serverAPI.DeleteRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock := mocks.NewStorageMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock := mocks.NewServerStorageMock(t)
 
 				storageMock.
 					On("ServerDelete", mock.Anything, tc.req.GetName()).
@@ -177,7 +177,7 @@ func Test_serverService_Start(t *testing.T) {
 	type testCase struct {
 		name        string
 		req         *serverAPI.StartRequest
-		setupMocks  func(t *testing.T, tc *testCase) *mocks.StorageMock
+		setupMocks  func(t *testing.T, tc *testCase) *mocks.ServerStorageMock
 		expErrorMsg string
 	}
 
@@ -185,8 +185,8 @@ func Test_serverService_Start(t *testing.T) {
 		{
 			name: "ok",
 			req:  &serverAPI.StartRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock, serverMock := mocks.NewStorageMock(t), mocks.NewServerMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock, serverMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t)
 
 				storageMock.
 					On("ServerGet", mock.Anything, tc.req.GetName()).
@@ -202,8 +202,8 @@ func Test_serverService_Start(t *testing.T) {
 		{
 			name: "error: server not found",
 			req:  &serverAPI.StartRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock := mocks.NewStorageMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock := mocks.NewServerStorageMock(t)
 
 				storageMock.
 					On("ServerGet", mock.Anything, tc.req.GetName()).
@@ -217,8 +217,8 @@ func Test_serverService_Start(t *testing.T) {
 		{
 			name: "error: server start error",
 			req:  &serverAPI.StartRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock, serverMock := mocks.NewStorageMock(t), mocks.NewServerMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock, serverMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t)
 
 				storageMock.
 					On("ServerGet", mock.Anything, tc.req.GetName()).
@@ -265,7 +265,7 @@ func Test_serverService_Stop(t *testing.T) {
 	type testCase struct {
 		name        string
 		req         *serverAPI.StopRequest
-		setupMocks  func(t *testing.T, tc *testCase) *mocks.StorageMock
+		setupMocks  func(t *testing.T, tc *testCase) *mocks.ServerStorageMock
 		expErrorMsg string
 	}
 
@@ -273,8 +273,8 @@ func Test_serverService_Stop(t *testing.T) {
 		{
 			name: "ok",
 			req:  &serverAPI.StopRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock, serverMock := mocks.NewStorageMock(t), mocks.NewServerMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock, serverMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t)
 
 				storageMock.
 					On("ServerGet", mock.Anything, tc.req.GetName()).
@@ -289,8 +289,8 @@ func Test_serverService_Stop(t *testing.T) {
 		{
 			name: "error: server not found",
 			req:  &serverAPI.StopRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock := mocks.NewStorageMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock := mocks.NewServerStorageMock(t)
 
 				storageMock.
 					On("ServerGet", mock.Anything, tc.req.GetName()).
@@ -304,8 +304,8 @@ func Test_serverService_Stop(t *testing.T) {
 		{
 			name: "error: server stop error",
 			req:  &serverAPI.StopRequest{Name: "sample"},
-			setupMocks: func(t *testing.T, tc *testCase) *mocks.StorageMock {
-				storageMock, serverMock := mocks.NewStorageMock(t), mocks.NewServerMock(t)
+			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
+				storageMock, serverMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t)
 
 				storageMock.
 					On("ServerGet", mock.Anything, tc.req.GetName()).

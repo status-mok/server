@@ -14,29 +14,35 @@ var (
 	ErrAlreadyExist = status.Error(codes.AlreadyExists, "already exist")
 )
 
-type Storage interface {
+type ServerStorage interface {
 	ServerGet(ctx context.Context, name string) (Server, error)
 	ServerCreate(ctx context.Context, srv Server) error
 	ServerDelete(ctx context.Context, name string) error
 }
 
-type storage struct {
-	servers map[string]Server
+type serverStorage struct {
+	storage map[string]Server
 
 	mu sync.RWMutex
 }
 
-func NewStorage() *storage {
-	return &storage{
-		servers: make(map[string]Server),
+func NewServerStorage(items ...Server) *serverStorage {
+	srvStorage := &serverStorage{
+		storage: make(map[string]Server, len(items)),
 	}
+
+	for _, item := range items {
+		srvStorage.storage[item.Name()] = item
+	}
+
+	return srvStorage
 }
 
-func (m *storage) ServerGet(_ context.Context, name string) (Server, error) {
+func (m *serverStorage) ServerGet(_ context.Context, name string) (Server, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	s, ok := m.servers[name]
+	s, ok := m.storage[name]
 	if !ok {
 		return nil, ErrNotFound
 	}
@@ -44,7 +50,7 @@ func (m *storage) ServerGet(_ context.Context, name string) (Server, error) {
 	return s, nil
 }
 
-func (m *storage) ServerCreate(ctx context.Context, srv Server) error {
+func (m *serverStorage) ServerCreate(ctx context.Context, srv Server) error {
 	if s, err := m.ServerGet(ctx, srv.Name()); err != nil {
 		if !errors.Is(err, ErrNotFound) {
 			return err
@@ -56,12 +62,12 @@ func (m *storage) ServerCreate(ctx context.Context, srv Server) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	m.servers[srv.Name()] = srv
+	m.storage[srv.Name()] = srv
 
 	return nil
 }
 
-func (m *storage) ServerDelete(ctx context.Context, name string) error {
+func (m *serverStorage) ServerDelete(ctx context.Context, name string) error {
 	if _, err := m.ServerGet(ctx, name); err != nil {
 		return err
 	}
@@ -69,7 +75,7 @@ func (m *storage) ServerDelete(ctx context.Context, name string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	delete(m.servers, name)
+	delete(m.storage, name)
 
 	return nil
 }
