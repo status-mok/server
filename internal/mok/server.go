@@ -5,9 +5,18 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"sync"
 
 	"github.com/status-mok/server/internal/pkg/errors"
 	"github.com/status-mok/server/internal/pkg/log"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+var (
+	ErrAlreadyStarting = status.Error(codes.FailedPrecondition, "already starting")
+	ErrAlreadyRunning  = status.Error(codes.FailedPrecondition, "already running")
+	ErrAlreadyStopped  = status.Error(codes.FailedPrecondition, "already stopped")
 )
 
 type mokServer struct {
@@ -16,10 +25,12 @@ type mokServer struct {
 	port  uint32     `mapstructure:"port"`
 	_type ServerType `mapstructure:"type"`
 
+	status ServerStatus
+
 	listener   net.Listener
 	httpServer *http.Server
 
-	status ServerStatus
+	mu sync.Mutex
 }
 
 func NewServer(name, ip string, port uint32, serverType ServerType) *mokServer {
@@ -28,6 +39,8 @@ func NewServer(name, ip string, port uint32, serverType ServerType) *mokServer {
 		ip:    ip,
 		port:  port,
 		_type: serverType,
+
+		status: ServerStatusStopped,
 	}
 }
 
@@ -39,7 +52,29 @@ func (s *mokServer) Name() string {
 	return s.name
 }
 
-func (s *mokServer) Start(ctx context.Context) error {
+func (s *mokServer) Status() ServerStatus {
+	return s.status
+}
+
+func (s *mokServer) Start(ctx context.Context) (err error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.status == ServerStatusRunning {
+		return ErrAlreadyRunning
+	} else if s.status == ServerStatusStarting {
+		return ErrAlreadyStarting
+	}
+
+	s.status = ServerStatusStarting
+	defer func() {
+		if err != nil {
+			s.status = ServerStatusStopped
+		} else {
+			s.status = ServerStatusRunning
+		}
+	}()
+
 	if s._type == ServerTypeHTTP {
 		s.httpServer = &http.Server{
 			Handler:  s.httpHandler(ctx),
@@ -48,13 +83,21 @@ func (s *mokServer) Start(ctx context.Context) error {
 
 		l, err := net.Listen("tcp", s.Addr())
 		if err != nil {
-			return errors.Wrapf(err, "failed to start listening to '%s'", s.Addr())
+			return errors.Wrapf(err, "failed to start tcp listening to '%s'", s.Addr())
 		}
 
 		go func() {
+			s.mu.Lock()
+			s.status = ServerStatusRunning
+			s.mu.Unlock()
+
 			if errS := s.httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				log.L(ctx).With("error", errS).Errorf("http server at '%s' stopped with error: '%s'", s.Addr(), errS)
 			}
+
+			s.mu.Lock()
+			s.status = ServerStatusStopped
+			s.mu.Unlock()
 		}()
 
 		return nil
@@ -66,6 +109,17 @@ func (s *mokServer) Start(ctx context.Context) error {
 }
 
 func (s *mokServer) Stop(ctx context.Context) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.status == ServerStatusStopped {
+		return ErrAlreadyStopped
+	}
+
+	defer func() {
+		s.status = ServerStatusStopped
+	}()
+
 	if s._type == ServerTypeHTTP {
 		return s.httpServer.Shutdown(ctx)
 	} else {

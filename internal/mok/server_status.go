@@ -9,14 +9,16 @@ var ErrServerStatusUnknown = errors.New("unknown server status")
 type ServerStatus int32
 
 const (
-	ServerStatusStopped = 1
-	ServerStatusRunning = 2
+	ServerStatusStopped = iota
+	ServerStatusStarting
+	ServerStatusRunning
 )
 
 var (
 	ServerStatusAllowed = map[ServerStatus]struct{}{
-		ServerStatusStopped: {},
-		ServerStatusRunning: {},
+		ServerStatusStopped:  {},
+		ServerStatusStarting: {},
+		ServerStatusRunning:  {},
 	}
 )
 
