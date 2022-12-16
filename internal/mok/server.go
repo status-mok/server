@@ -18,7 +18,16 @@ var (
 	ErrAlreadyStopped = status.Error(codes.FailedPrecondition, "already stopped")
 )
 
-type mokServer struct {
+type Server interface {
+	Addr() string
+	Name() string
+	Status() ServerStatus
+
+	Start(ctx context.Context) (err error)
+	Stop(ctx context.Context) error
+}
+
+type server struct {
 	name  string     `mapstructure:"name"`
 	ip    string     `mapstructure:"ip"`
 	port  uint32     `mapstructure:"port"`
@@ -32,8 +41,8 @@ type mokServer struct {
 	mu sync.Mutex
 }
 
-func NewServer(name, ip string, port uint32, serverType ServerType) *mokServer {
-	return &mokServer{
+func NewServer(name, ip string, port uint32, serverType ServerType) *server {
+	return &server{
 		name:  name,
 		ip:    ip,
 		port:  port,
@@ -43,7 +52,7 @@ func NewServer(name, ip string, port uint32, serverType ServerType) *mokServer {
 	}
 }
 
-func (s *mokServer) Addr() string {
+func (s *server) Addr() string {
 	if s.listener != nil {
 		return s.listener.Addr().String()
 	}
@@ -51,15 +60,15 @@ func (s *mokServer) Addr() string {
 	return fmt.Sprintf("%s:%d", s.ip, s.port)
 }
 
-func (s *mokServer) Name() string {
+func (s *server) Name() string {
 	return s.name
 }
 
-func (s *mokServer) Status() ServerStatus {
+func (s *server) Status() ServerStatus {
 	return s.status
 }
 
-func (s *mokServer) Start(ctx context.Context) (err error) {
+func (s *server) Start(ctx context.Context) (err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -106,7 +115,7 @@ func (s *mokServer) Start(ctx context.Context) (err error) {
 	return nil
 }
 
-func (s *mokServer) Stop(ctx context.Context) error {
+func (s *server) Stop(ctx context.Context) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

@@ -9,37 +9,25 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestStorage_ServerGet(t *testing.T) {
+func Test_storage_ServerGet(t *testing.T) {
 	ctx := context.Background()
-
 	sampleServer := NewServer("sample", "", 0, ServerTypeHTTP)
-	nonEmptyStorage := func() *Storage {
-		s := NewStorage()
-		s.servers[sampleServer.Name()] = sampleServer
-		return s
-	}
 
 	testCases := []struct {
 		name        string
 		serverName  string
-		storage     *Storage
+		storage     *storage
 		expErrorMsg string
 	}{
 		{
 			name:       "ok",
 			serverName: sampleServer.Name(),
-			storage:    nonEmptyStorage(),
+			storage:    testStorage(10, sampleServer),
 		},
 		{
 			name:        "error: not found",
-			serverName:  "qwerty",
-			storage:     nonEmptyStorage(),
-			expErrorMsg: ErrNotFound.Error(),
-		},
-		{
-			name:        "error: not found",
-			serverName:  "qwerty",
-			storage:     NewStorage(),
+			serverName:  sampleServer.Name(),
+			storage:     testStorage(10),
 			expErrorMsg: ErrNotFound.Error(),
 		},
 	}
@@ -65,34 +53,25 @@ func TestStorage_ServerGet(t *testing.T) {
 	}
 }
 
-func TestStorage_ServerCreate(t *testing.T) {
+func Test_storage_ServerCreate(t *testing.T) {
 	ctx := context.Background()
-
 	sampleServer := NewServer("sample", "", 0, ServerTypeHTTP)
-	nonEmptyStorage := func(n int) *Storage {
-		s := NewStorage()
-		s.servers[sampleServer.Name()] = sampleServer
-		for i := 1; i < n; i++ {
-			s.servers[sampleServer.Name()+fmt.Sprint()] = NewServer("sample", "", 0, ServerTypeHTTP)
-		}
-		return s
-	}
 
 	testCases := []struct {
 		name        string
-		server      *mokServer
-		storage     *Storage
+		server      *server
+		storage     *storage
 		expErrorMsg string
 	}{
 		{
 			name:    "ok",
 			server:  sampleServer,
-			storage: NewStorage(),
+			storage: testStorage(10),
 		},
 		{
 			name:        "fail: already exist",
 			server:      sampleServer,
-			storage:     nonEmptyStorage(10),
+			storage:     testStorage(10, sampleServer),
 			expErrorMsg: ErrAlreadyExist.Error(),
 		},
 	}
@@ -120,34 +99,25 @@ func TestStorage_ServerCreate(t *testing.T) {
 	}
 }
 
-func TestStorage_ServerDelete(t *testing.T) {
+func Test_storage_ServerDelete(t *testing.T) {
 	ctx := context.Background()
-
 	sampleServer := NewServer("sample", "", 0, ServerTypeHTTP)
-	nonEmptyStorage := func(n int) *Storage {
-		s := NewStorage()
-		s.servers[sampleServer.Name()] = sampleServer
-		for i := 1; i < n; i++ {
-			s.servers[sampleServer.Name()+fmt.Sprint()] = NewServer("sample", "", 0, ServerTypeHTTP)
-		}
-		return s
-	}
 
 	testCases := []struct {
 		name        string
 		serverName  string
-		storage     *Storage
+		storage     *storage
 		expErrorMsg string
 	}{
 		{
 			name:       "ok",
 			serverName: sampleServer.Name(),
-			storage:    nonEmptyStorage(10),
+			storage:    testStorage(10, sampleServer),
 		},
 		{
 			name:        "fail: not found",
 			serverName:  sampleServer.Name(),
-			storage:     NewStorage(),
+			storage:     testStorage(10),
 			expErrorMsg: ErrNotFound.Error(),
 		},
 	}
@@ -173,4 +143,21 @@ func TestStorage_ServerDelete(t *testing.T) {
 			}
 		})
 	}
+}
+
+func testStorage(n int, servers ...*server) *storage {
+	s := NewStorage()
+
+	for i := 0; i < n; i++ {
+		name := fmt.Sprint(i)
+		s.servers[name] = NewServer(name, "", 0, ServerTypeHTTP)
+	}
+
+	if len(servers) > 0 {
+		for _, srv := range servers {
+			s.servers[srv.Name()] = srv
+		}
+	}
+
+	return s
 }

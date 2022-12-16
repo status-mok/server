@@ -14,19 +14,25 @@ var (
 	ErrAlreadyExist = status.Error(codes.AlreadyExists, "already exist")
 )
 
-type Storage struct {
-	servers map[string]*mokServer
+type Storage interface {
+	ServerGet(ctx context.Context, name string) (Server, error)
+	ServerCreate(ctx context.Context, srv Server) error
+	ServerDelete(ctx context.Context, name string) error
+}
+
+type storage struct {
+	servers map[string]Server
 
 	mu sync.RWMutex
 }
 
-func NewStorage() *Storage {
-	return &Storage{
-		servers: make(map[string]*mokServer),
+func NewStorage() *storage {
+	return &storage{
+		servers: make(map[string]Server),
 	}
 }
 
-func (m *Storage) ServerGet(_ context.Context, name string) (*mokServer, error) {
+func (m *storage) ServerGet(_ context.Context, name string) (Server, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
@@ -38,7 +44,7 @@ func (m *Storage) ServerGet(_ context.Context, name string) (*mokServer, error) 
 	return s, nil
 }
 
-func (m *Storage) ServerCreate(ctx context.Context, srv *mokServer) error {
+func (m *storage) ServerCreate(ctx context.Context, srv Server) error {
 	if s, err := m.ServerGet(ctx, srv.Name()); err != nil {
 		if !errors.Is(err, ErrNotFound) {
 			return err
@@ -55,7 +61,7 @@ func (m *Storage) ServerCreate(ctx context.Context, srv *mokServer) error {
 	return nil
 }
 
-func (m *Storage) ServerDelete(ctx context.Context, name string) error {
+func (m *storage) ServerDelete(ctx context.Context, name string) error {
 	if _, err := m.ServerGet(ctx, name); err != nil {
 		return err
 	}

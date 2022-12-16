@@ -10,7 +10,7 @@ import (
 	"github.com/status-mok/server/internal/pkg/log"
 )
 
-func (s *mokServer) httpHandler(ctx context.Context) http.Handler {
+func (s *server) httpHandler(ctx context.Context) http.Handler {
 	mux := chi.NewMux()
 
 	mux.Use(middleware.RealIP)
@@ -23,7 +23,7 @@ func (s *mokServer) httpHandler(ctx context.Context) http.Handler {
 	return mux
 }
 
-func (s *mokServer) httpHandlerFunc(_ http.ResponseWriter, r *http.Request) {
+func (s *server) httpHandlerFunc(_ http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	// 1 log request

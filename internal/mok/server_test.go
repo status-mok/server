@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_mokServer_Start(t *testing.T) {
+func Test_server_Start(t *testing.T) {
 	ctx := context.Background()
 	portInUse := tester.GetFreePort()
 	_, err := net.Listen("tcp", fmt.Sprintf(":%d", portInUse))
@@ -20,7 +20,7 @@ func Test_mokServer_Start(t *testing.T) {
 
 	type testCase struct {
 		name        string
-		server      *mokServer
+		server      *server
 		beforeTest  func(t *testing.T, tc *testCase)
 		expErrorMsg string
 	}
@@ -78,12 +78,12 @@ func Test_mokServer_Start(t *testing.T) {
 	}
 }
 
-func Test_mokServer_Stop(t *testing.T) {
+func Test_server_Stop(t *testing.T) {
 	ctx := context.Background()
 
 	type testCase struct {
 		name        string
-		server      *mokServer
+		server      *server
 		beforeTest  func(t *testing.T, tc *testCase)
 		expErrorMsg string
 	}

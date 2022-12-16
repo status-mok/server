@@ -12,7 +12,10 @@ buf-lint:
 buf-generate: buf-lint buf-format
 	@buf generate
 
-install-deps: buf-deps
+install-deps: buf-deps go-deps
+
+go-deps:
+	@go install github.com/vektra/mockery/v2
 
 buf-deps:
 	@go install github.com/bufbuild/buf/cmd/buf@v1.10.0
