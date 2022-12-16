@@ -9,12 +9,12 @@ import (
 )
 
 type serverService struct {
-	storage *mok.Storage
+	storage mok.Storage
 
 	serverAPI.UnimplementedServerServiceServer
 }
 
-func NewServerService(storage *mok.Storage) *serverService {
+func NewServerService(storage mok.Storage) *serverService {
 	return &serverService{
 		storage: storage,
 	}
@@ -58,7 +58,10 @@ func (s serverService) Start(ctx context.Context, req *serverAPI.StartRequest) (
 		return nil, errors.Wrapf(err, "failed to start server '%s'", req.GetName())
 	}
 
-	return &serverAPI.StartResponse{Success: true}, nil
+	return &serverAPI.StartResponse{
+		Success: true,
+		Address: srv.Addr(),
+	}, nil
 }
 
 func (s serverService) Stop(ctx context.Context, req *serverAPI.StopRequest) (*serverAPI.StopResponse, error) {
