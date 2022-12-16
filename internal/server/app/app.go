@@ -36,7 +36,7 @@ func NewApp() *app {
 	return &app{}
 }
 
-func (app *app) Start(ctx context.Context, configPath string) error {
+func (app *app) Run(ctx context.Context, configPath string) error {
 	var err error
 	app.conf, err = config.NewAppConfig(ctx, configPath)
 	if err != nil {

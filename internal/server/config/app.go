@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/sethvargo/go-envconfig"
+	"github.com/status-mok/server/internal/pkg/errors"
 	"github.com/status-mok/server/internal/pkg/log"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/yaml.v3"
@@ -22,18 +23,18 @@ func NewAppConfig(ctx context.Context, configPath string) (*AppConfig, error) {
 	var conf AppConfig
 	if len(configPath) == 0 {
 		if err := envconfig.Process(ctx, &conf); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to process config environment variables")
 		}
 		return &conf, nil
 	}
 
 	f, err := os.ReadFile(configPath)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "failed to open config file '%s'", configPath)
 	}
 
 	if err = yaml.Unmarshal(f, &conf); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decode config yaml")
 	}
 
 	return &conf, nil
