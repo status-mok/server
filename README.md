@@ -6,8 +6,8 @@ The main goal is to make an all-in-one mock server for Web developers and tester
 
 ### Goal decomposition
 1. It provides an admin API via REST and GRPC.
-2. It runs one or several servers on one instance.
-3. Servers can be created manually or using config files.
+2. It runs one or several mock servers on one instance.
+3. Mock servers can be created manually or using config files.
 4. Mock server configuration can be exported and imported (own format).
 5. It supports the most common protocols:
    * HTTP (REST, GraphQL, WebSockets)
@@ -27,4 +27,4 @@ The main goal is to make an all-in-one mock server for Web developers and tester
 13. The server shall be distributed as docker image and binaries.
 
 ### Custom integrations
-1. ngrok - make a locally running server available via ngrok reverse-proxy.
+1. ngrok - make mock servers publicly available via ngrok reverse-proxy.
