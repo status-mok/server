@@ -31,9 +31,9 @@ func (s routeService) Create(ctx context.Context, req *routeAPI.CreateRequest) (
 		return nil, err
 	}
 
-	ept := mok.NewRoute(req.GetUrl(), routeType)
+	rt := mok.NewRoute(req.GetUrl(), routeType)
 
-	if err := srv.RouteCreate(ctx, ept); err != nil {
+	if err := srv.RouteCreate(ctx, rt); err != nil {
 		return nil, errors.Wrapf(err, "failed to create route '%s' for server '%s'", req.GetUrl(), req.GetServerName())
 	}
 

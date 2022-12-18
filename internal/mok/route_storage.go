@@ -9,7 +9,7 @@ import (
 
 type RouteStorage interface {
 	RouteGet(ctx context.Context, url string) (Route, error)
-	RouteCreate(ctx context.Context, ept Route) error
+	RouteCreate(ctx context.Context, rt Route) error
 	RouteDelete(ctx context.Context, url string) error
 }
 
@@ -35,16 +35,16 @@ func (e *routeStorage) RouteGet(_ context.Context, url string) (Route, error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
 
-	ept, ok := e.storage[url]
+	rt, ok := e.storage[url]
 	if !ok {
 		return nil, ErrNotFound
 	}
 
-	return ept, nil
+	return rt, nil
 }
 
-func (e *routeStorage) RouteCreate(ctx context.Context, ept Route) error {
-	if s, err := e.RouteGet(ctx, ept.URL()); err != nil {
+func (e *routeStorage) RouteCreate(ctx context.Context, rt Route) error {
+	if s, err := e.RouteGet(ctx, rt.URL()); err != nil {
 		if !errors.Is(err, ErrNotFound) {
 			return err
 		}
@@ -55,7 +55,7 @@ func (e *routeStorage) RouteCreate(ctx context.Context, ept Route) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 
-	e.storage[ept.URL()] = ept
+	e.storage[rt.URL()] = rt
 
 	return nil
 }
