@@ -40,25 +40,24 @@ type app struct {
 
 type grpcGatewayRegister func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error
 
-func NewApp() *app {
-	return &app{}
-}
-
-func (app *app) Run(ctx context.Context, configPath string) error {
-	var err error
-	app.conf, err = config.NewAppConfig(ctx, configPath)
+func NewApp(ctx context.Context, configPath string) (*app, error) {
+	conf, err := config.NewAppConfig(ctx, configPath)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	log.SetLogger(log.New(app.conf.LogLevel(), os.Stdout))
+	log.SetLogger(log.New(conf.LogLevel(), os.Stdout))
 
-	app.initServices(ctx)
+	return &app{conf: conf}, nil
+}
+
+func (a *app) Run(ctx context.Context) error {
+	a.initServices(ctx)
 
 	errGroup, errCtx := errgroup.WithContext(ctx)
 
 	errGroup.Go(func() error {
-		errG := app.startGRPCServer(errCtx)
+		errG := a.startGRPCServer(errCtx)
 		if errG != nil {
 			return errors.Wrap(errG, "failed to start grpc admin API server")
 		}
@@ -67,7 +66,7 @@ func (app *app) Run(ctx context.Context, configPath string) error {
 	})
 
 	errGroup.Go(func() error {
-		errH := app.startHTTPServer(errCtx)
+		errH := a.startHTTPServer(errCtx)
 		if errH != nil {
 			return errors.Wrap(errH, "failed to start http admin API server")
 		}
@@ -78,15 +77,15 @@ func (app *app) Run(ctx context.Context, configPath string) error {
 	return errGroup.Wait()
 }
 
-func (app *app) initServices(_ context.Context) {
+func (a *app) initServices(_ context.Context) {
 	storage := mok.NewServerStorage()
 
-	app.serverService = server.NewServerService(storage)
-	app.routeService = route.NewRouteService(storage)
-	app.expectationService = expectation.NewExpectationService(storage)
+	a.serverService = server.NewServerService(storage)
+	a.routeService = route.NewRouteService(storage)
+	a.expectationService = expectation.NewExpectationService(storage)
 }
 
-func (app *app) startHTTPServer(ctx context.Context) error {
+func (a *app) startHTTPServer(ctx context.Context) error {
 	mux := chi.NewMux()
 
 	mux.Use(middleware.RealIP)
@@ -113,13 +112,13 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 		expectationAPI.RegisterExpectationServiceHandlerFromEndpoint,
 	}
 	for _, registerFn := range serviceRegisters {
-		if err := registerFn(ctx, gwMux, app.conf.AdminGRPCAddress(), opts); err != nil {
+		if err := registerFn(ctx, gwMux, a.conf.AdminGRPCAddress(), opts); err != nil {
 			return err
 		}
 	}
 
 	srv := http.Server{
-		Addr:     app.conf.AdminHTTPAddress(),
+		Addr:     a.conf.AdminHTTPAddress(),
 		Handler:  mux,
 		ErrorLog: log.StdLogger(ctx),
 	}
@@ -136,7 +135,7 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 		log.L(ctx).Info("admin api http server stopped")
 	}()
 
-	log.L(ctx).Infof("admin api http server listening at '%v'", app.conf.AdminHTTPAddress())
+	log.L(ctx).Infof("admin api http server listening at '%v'", a.conf.AdminHTTPAddress())
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}
@@ -144,19 +143,22 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 	return nil
 }
 
-func (app *app) startGRPCServer(ctx context.Context) error {
-	listener, err := net.Listen("tcp", app.conf.AdminGRPCAddress())
+func (a *app) startGRPCServer(ctx context.Context) error {
+	listener, err := net.Listen("tcp", a.conf.AdminGRPCAddress())
 	if err != nil {
 		log.L(ctx).Fatalf("failed to init tcp listener: '%v'", err)
 	}
 
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(grpcMiddleware.NewErrorUnaryInterceptor()),
+		grpc.ChainUnaryInterceptor(
+			grpcMiddleware.NewErrorUnaryInterceptor(),
+			grpcMiddleware.NewMessageValidatorInterceptor(),
+		),
 	}
 	grpcServer := grpc.NewServer(opts...)
-	serverAPI.RegisterServerServiceServer(grpcServer, app.serverService)
-	routeAPI.RegisterRouteServiceServer(grpcServer, app.routeService)
-	expectationAPI.RegisterExpectationServiceServer(grpcServer, app.expectationService)
+	serverAPI.RegisterServerServiceServer(grpcServer, a.serverService)
+	routeAPI.RegisterRouteServiceServer(grpcServer, a.routeService)
+	expectationAPI.RegisterExpectationServiceServer(grpcServer, a.expectationService)
 
 	go func() {
 		blockUntilExitSignalOrCtxTermination(ctx)
@@ -165,7 +167,7 @@ func (app *app) startGRPCServer(ctx context.Context) error {
 		log.L(ctx).Info("admin api grpc server stopped")
 	}()
 
-	log.L(ctx).Infof("admin api grpc server listening on '%v'", app.conf.AdminGRPCAddress())
+	log.L(ctx).Infof("admin api grpc server listening on '%v'", a.conf.AdminGRPCAddress())
 	if err = grpcServer.Serve(listener); err != nil {
 		return err
 	}

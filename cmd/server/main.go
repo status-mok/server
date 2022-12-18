@@ -16,9 +16,12 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	application := app.NewApp()
+	application, err := app.NewApp(ctx, *flagConfigFile)
+	if err != nil {
+		log.L(ctx).Fatal(err)
+	}
 
-	if err := application.Run(ctx, *flagConfigFile); err != nil {
+	if err = application.Run(ctx); err != nil {
 		log.L(ctx).Fatal(err)
 	}
 }
