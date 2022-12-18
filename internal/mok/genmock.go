@@ -1,8 +1,8 @@
 //go:generate mockery --name=(.+)Mock --case=underscore
 package mok
 
-type EndpointMock interface {
-	Endpoint
+type RouteMock interface {
+	Route
 }
 
 type ServerMock interface {

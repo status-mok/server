@@ -15,7 +15,7 @@ type ExpectationStorage interface {
 	ExpectationGet(ctx context.Context, id string) (Expectation, error)
 	ExpectationCreate(ctx context.Context, exp Expectation) error
 	ExpectationDelete(ctx context.Context, id string) error
-	ExpectationFindMatch(ctx context.Context, endpointType EndpointType, req any) (Expectation, error)
+	ExpectationFindMatch(ctx context.Context, routeType RouteType, req any) (Expectation, error)
 }
 
 type expectationStorage struct {
@@ -78,12 +78,12 @@ func (e *expectationStorage) ExpectationDelete(ctx context.Context, id string) e
 	return nil
 }
 
-func (e *expectationStorage) ExpectationFindMatch(ctx context.Context, endpointType EndpointType, req any) (Expectation, error) {
+func (e *expectationStorage) ExpectationFindMatch(ctx context.Context, routeType RouteType, req any) (Expectation, error) {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
 
 	for _, exp := range e.storage {
-		if exp.Match(ctx, endpointType, req) {
+		if exp.Match(ctx, routeType, req) {
 			return exp, nil
 		}
 	}

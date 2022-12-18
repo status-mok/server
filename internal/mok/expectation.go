@@ -10,7 +10,7 @@ import (
 type Expectation interface {
 	ID() string
 
-	Match(ctx context.Context, endpointType EndpointType, req any) bool
+	Match(ctx context.Context, routeType RouteType, req any) bool
 }
 
 type expectation struct {
@@ -35,6 +35,6 @@ func (e *expectation) ID() string {
 	return e.id
 }
 
-func (e *expectation) Match(_ context.Context, _ EndpointType, _ any) bool {
+func (e *expectation) Match(_ context.Context, _ RouteType, _ any) bool {
 	return true
 }

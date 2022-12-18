@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "endpoint-api/endpoint_api.proto",
+    "title": "route-api/route_api.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "EndpointService"
+      "name": "RouteService"
     }
   ],
   "consumes": [
@@ -16,15 +16,15 @@
     "application/json"
   ],
   "paths": {
-    "/endpoint/create": {
+    "/route/create": {
       "post": {
         "summary": "Create",
-        "operationId": "EndpointService_Create",
+        "operationId": "RouteService_Create",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/EndpointServiceCreateResponse"
+              "$ref": "#/definitions/RouteServiceCreateResponse"
             }
           }
         },
@@ -34,24 +34,24 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/EndpointServiceCreateRequest"
+              "$ref": "#/definitions/RouteServiceCreateRequest"
             }
           }
         ],
         "tags": [
-          "EndpointService"
+          "RouteService"
         ]
       }
     },
-    "/endpoint/delete": {
+    "/route/delete": {
       "post": {
         "summary": "Delete",
-        "operationId": "EndpointService_Delete",
+        "operationId": "RouteService_Delete",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/EndpointServiceDeleteResponse"
+              "$ref": "#/definitions/RouteServiceDeleteResponse"
             }
           }
         },
@@ -61,18 +61,18 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/EndpointServiceDeleteRequest"
+              "$ref": "#/definitions/RouteServiceDeleteRequest"
             }
           }
         ],
         "tags": [
-          "EndpointService"
+          "RouteService"
         ]
       }
     }
   },
   "definitions": {
-    "EndpointServiceCreateRequest": {
+    "RouteServiceCreateRequest": {
       "type": "object",
       "properties": {
         "server_name": {
@@ -84,11 +84,11 @@
         "url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of the endpoint.\n\nThe endpoint type.",
+          "description": "URL is a relative URI of the route.\n\nThe route type.",
           "minLength": 1
         },
         "type": {
-          "$ref": "#/definitions/EndpointServiceEndpointType",
+          "$ref": "#/definitions/RouteServiceRouteType",
           "title": "1: ReqResp\n2: WebSocket"
         }
       },
@@ -98,7 +98,7 @@
         "type"
       ]
     },
-    "EndpointServiceCreateResponse": {
+    "RouteServiceCreateResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -106,7 +106,7 @@
         }
       }
     },
-    "EndpointServiceDeleteRequest": {
+    "RouteServiceDeleteRequest": {
       "type": "object",
       "properties": {
         "server_name": {
@@ -118,7 +118,7 @@
         "url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of the endpoint.",
+          "description": "URL is a relative URI of the route.",
           "minLength": 1
         }
       },
@@ -127,7 +127,7 @@
         "url"
       ]
     },
-    "EndpointServiceDeleteResponse": {
+    "RouteServiceDeleteResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -136,14 +136,14 @@
         }
       }
     },
-    "EndpointServiceEndpointType": {
+    "RouteServiceRouteType": {
       "type": "string",
       "enum": [
-        "ENDPOINT_TYPE_UNSPECIFIED",
-        "ENDPOINT_TYPE_REQ_RESP",
-        "ENDPOINT_TYPE_WEBSOCKET"
+        "ROUTE_TYPE_UNSPECIFIED",
+        "ROUTE_TYPE_REQ_RESP",
+        "ROUTE_TYPE_WEBSOCKET"
       ],
-      "default": "ENDPOINT_TYPE_UNSPECIFIED"
+      "default": "ROUTE_TYPE_UNSPECIFIED"
     }
   }
 }

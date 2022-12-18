@@ -14,8 +14,8 @@ The main goal is to make an all-in-one mock server for Web developers and tester
    * GRPC
    * Thrift
    * TCP/UDP
-6. You can add expectations for each endpoint/rpc based on input values.
-7. You can customize response of each endpoint/rpc using:
+6. You can add expectations for each route/rpc based on input values.
+7. You can customize response of each route/rpc using:
    * fixed values
    * random values
    * values from imported lists

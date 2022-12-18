@@ -39,7 +39,7 @@ func (s *server) httpHandlerFunc(_ http.ResponseWriter, r *http.Request) {
 		).Debug("request dump")
 	}
 
-	// 2 find endpoint
-	// 3 decide if request match any endpoint mock
+	// 2 find route
+	// 3 decide if request match any route mock
 	// 4 respond
 }

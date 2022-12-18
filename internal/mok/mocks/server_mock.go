@@ -28,57 +28,6 @@ func (_m *ServerMock) Addr() string {
 	return r0
 }
 
-// EndpointCreate provides a mock function with given fields: ctx, ept
-func (_m *ServerMock) EndpointCreate(ctx context.Context, ept mok.Endpoint) error {
-	ret := _m.Called(ctx, ept)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, mok.Endpoint) error); ok {
-		r0 = rf(ctx, ept)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// EndpointDelete provides a mock function with given fields: ctx, url
-func (_m *ServerMock) EndpointDelete(ctx context.Context, url string) error {
-	ret := _m.Called(ctx, url)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
-		r0 = rf(ctx, url)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// EndpointGet provides a mock function with given fields: ctx, url
-func (_m *ServerMock) EndpointGet(ctx context.Context, url string) (mok.Endpoint, error) {
-	ret := _m.Called(ctx, url)
-
-	var r0 mok.Endpoint
-	if rf, ok := ret.Get(0).(func(context.Context, string) mok.Endpoint); ok {
-		r0 = rf(ctx, url)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(mok.Endpoint)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, url)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // Name provides a mock function with given fields:
 func (_m *ServerMock) Name() string {
 	ret := _m.Called()
@@ -91,6 +40,57 @@ func (_m *ServerMock) Name() string {
 	}
 
 	return r0
+}
+
+// RouteCreate provides a mock function with given fields: ctx, ept
+func (_m *ServerMock) RouteCreate(ctx context.Context, ept mok.Route) error {
+	ret := _m.Called(ctx, ept)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, mok.Route) error); ok {
+		r0 = rf(ctx, ept)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// RouteDelete provides a mock function with given fields: ctx, url
+func (_m *ServerMock) RouteDelete(ctx context.Context, url string) error {
+	ret := _m.Called(ctx, url)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, url)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// RouteGet provides a mock function with given fields: ctx, url
+func (_m *ServerMock) RouteGet(ctx context.Context, url string) (mok.Route, error) {
+	ret := _m.Called(ctx, url)
+
+	var r0 mok.Route
+	if rf, ok := ret.Get(0).(func(context.Context, string) mok.Route); ok {
+		r0 = rf(ctx, url)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(mok.Route)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, url)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Start provides a mock function with given fields: ctx

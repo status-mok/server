@@ -68,9 +68,9 @@ func (m *CreateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, err := url.Parse(m.GetEndpointUrl()); err != nil {
+	if _, err := url.Parse(m.GetRouteUrl()); err != nil {
 		err = CreateRequestValidationError{
-			field:  "EndpointUrl",
+			field:  "RouteUrl",
 			reason: "value must be a valid URI",
 			cause:  err,
 		}
@@ -312,9 +312,9 @@ func (m *DeleteRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, err := url.Parse(m.GetEndpointUrl()); err != nil {
+	if _, err := url.Parse(m.GetRouteUrl()); err != nil {
 		err = DeleteRequestValidationError{
-			field:  "EndpointUrl",
+			field:  "RouteUrl",
 			reason: "value must be a valid URI",
 			cause:  err,
 		}

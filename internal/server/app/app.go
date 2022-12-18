@@ -19,11 +19,11 @@ import (
 	"github.com/status-mok/server/internal/pkg/log"
 	grpcMiddleware "github.com/status-mok/server/internal/pkg/middleware/grpc"
 	"github.com/status-mok/server/internal/server/config"
-	"github.com/status-mok/server/internal/server/service/endpoint"
 	"github.com/status-mok/server/internal/server/service/expectation"
+	"github.com/status-mok/server/internal/server/service/route"
 	"github.com/status-mok/server/internal/server/service/server"
-	endpointAPI "github.com/status-mok/server/pkg/endpoint-api"
 	expectationAPI "github.com/status-mok/server/pkg/expectation-api"
+	routeAPI "github.com/status-mok/server/pkg/route-api"
 	serverAPI "github.com/status-mok/server/pkg/server-api"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -32,7 +32,7 @@ import (
 
 type app struct {
 	serverService      serverAPI.ServerServiceServer
-	endpointService    endpointAPI.EndpointServiceServer
+	routeService       routeAPI.RouteServiceServer
 	expectationService expectationAPI.ExpectationServiceServer
 
 	conf *config.AppConfig
@@ -82,7 +82,7 @@ func (app *app) initServices(_ context.Context) {
 	storage := mok.NewServerStorage()
 
 	app.serverService = server.NewServerService(storage)
-	app.endpointService = endpoint.NewEndpointService(storage)
+	app.routeService = route.NewRouteService(storage)
 	app.expectationService = expectation.NewExpectationService(storage)
 }
 
@@ -98,7 +98,7 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 
 	serviceDocs := []docs.ServiceDoc{
 		{"server-api", serverAPI.SwaggerJSON},
-		{"endpoint-api", endpointAPI.SwaggerJSON},
+		{"route-api", routeAPI.SwaggerJSON},
 		{"expectation-api", expectationAPI.SwaggerJSON},
 	}
 	mux.Mount("/docs", docs.NewServiceDocsHandler(serviceDocs...))
@@ -109,7 +109,7 @@ func (app *app) startHTTPServer(ctx context.Context) error {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	serviceRegisters := []grpcGatewayRegister{
 		serverAPI.RegisterServerServiceHandlerFromEndpoint,
-		endpointAPI.RegisterEndpointServiceHandlerFromEndpoint,
+		routeAPI.RegisterRouteServiceHandlerFromEndpoint,
 		expectationAPI.RegisterExpectationServiceHandlerFromEndpoint,
 	}
 	for _, registerFn := range serviceRegisters {
@@ -155,7 +155,7 @@ func (app *app) startGRPCServer(ctx context.Context) error {
 	}
 	grpcServer := grpc.NewServer(opts...)
 	serverAPI.RegisterServerServiceServer(grpcServer, app.serverService)
-	endpointAPI.RegisterEndpointServiceServer(grpcServer, app.endpointService)
+	routeAPI.RegisterRouteServiceServer(grpcServer, app.routeService)
 	expectationAPI.RegisterExpectationServiceServer(grpcServer, app.expectationService)
 
 	go func() {

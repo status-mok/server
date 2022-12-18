@@ -16,7 +16,7 @@ import (
 func Test_expectationService_Create(t *testing.T) {
 	ctx := context.Background()
 	id := uuid.NewV4().String()
-	sampleReq := &expectationAPI.CreateRequest{ServerName: "sample", EndpointUrl: "/sample-url", Id: &id}
+	sampleReq := &expectationAPI.CreateRequest{ServerName: "sample", RouteUrl: "/sample-url", Id: &id}
 
 	type testCase struct {
 		name        string
@@ -30,7 +30,7 @@ func Test_expectationService_Create(t *testing.T) {
 			name: "ok",
 			req:  sampleReq,
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
-				serverStorageMock, serverMock, endpointMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewEndpointMock(t)
+				serverStorageMock, serverMock, routeMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewRouteMock(t)
 
 				serverStorageMock.
 					On("ServerGet", mock.Anything, tc.req.GetServerName()).
@@ -38,13 +38,13 @@ func Test_expectationService_Create(t *testing.T) {
 					Once()
 
 				serverMock.
-					On("EndpointGet", mock.Anything, tc.req.GetEndpointUrl()).
-					Return(endpointMock, nil).
+					On("RouteGet", mock.Anything, tc.req.GetRouteUrl()).
+					Return(routeMock, nil).
 					Once()
 
 				exp := mok.NewExpectation(tc.req.GetId())
 
-				endpointMock.
+				routeMock.
 					On("ExpectationCreate", mock.Anything, exp).
 					Return(nil).
 					Once()
@@ -68,7 +68,7 @@ func Test_expectationService_Create(t *testing.T) {
 			expErrorMsg: mok.ErrNotFound.Error(),
 		},
 		{
-			name: "error: endpoint not found",
+			name: "error: route not found",
 			req:  sampleReq,
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
 				serverStorageMock, serverMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t)
@@ -79,7 +79,7 @@ func Test_expectationService_Create(t *testing.T) {
 					Once()
 
 				serverMock.
-					On("EndpointGet", mock.Anything, tc.req.GetEndpointUrl()).
+					On("RouteGet", mock.Anything, tc.req.GetRouteUrl()).
 					Return(nil, mok.ErrNotFound).
 					Once()
 
@@ -91,7 +91,7 @@ func Test_expectationService_Create(t *testing.T) {
 			name: "error: expectation already exist",
 			req:  sampleReq,
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
-				serverStorageMock, serverMock, endpointMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewEndpointMock(t)
+				serverStorageMock, serverMock, routeMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewRouteMock(t)
 
 				serverStorageMock.
 					On("ServerGet", mock.Anything, tc.req.GetServerName()).
@@ -99,13 +99,13 @@ func Test_expectationService_Create(t *testing.T) {
 					Once()
 
 				serverMock.
-					On("EndpointGet", mock.Anything, tc.req.GetEndpointUrl()).
-					Return(endpointMock, nil).
+					On("RouteGet", mock.Anything, tc.req.GetRouteUrl()).
+					Return(routeMock, nil).
 					Once()
 
 				exp := mok.NewExpectation(tc.req.GetId())
 
-				endpointMock.
+				routeMock.
 					On("ExpectationCreate", mock.Anything, exp).
 					Return(mok.ErrAlreadyExist).
 					Once()
@@ -143,7 +143,7 @@ func Test_expectationService_Create(t *testing.T) {
 
 func Test_expectationService_Delete(t *testing.T) {
 	ctx := context.Background()
-	sampleReq := &expectationAPI.DeleteRequest{ServerName: "sample", EndpointUrl: "/sample-url", Id: uuid.NewV4().String()}
+	sampleReq := &expectationAPI.DeleteRequest{ServerName: "sample", RouteUrl: "/sample-url", Id: uuid.NewV4().String()}
 
 	type testCase struct {
 		name        string
@@ -157,7 +157,7 @@ func Test_expectationService_Delete(t *testing.T) {
 			name: "ok",
 			req:  sampleReq,
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
-				serverStorageMock, serverMock, endpointMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewEndpointMock(t)
+				serverStorageMock, serverMock, routeMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewRouteMock(t)
 
 				serverStorageMock.
 					On("ServerGet", mock.Anything, tc.req.GetServerName()).
@@ -165,11 +165,11 @@ func Test_expectationService_Delete(t *testing.T) {
 					Once()
 
 				serverMock.
-					On("EndpointGet", mock.Anything, tc.req.GetEndpointUrl()).
-					Return(endpointMock, nil).
+					On("RouteGet", mock.Anything, tc.req.GetRouteUrl()).
+					Return(routeMock, nil).
 					Once()
 
-				endpointMock.
+				routeMock.
 					On("ExpectationDelete", mock.Anything, tc.req.GetId()).
 					Return(nil).
 					Once()
@@ -193,7 +193,7 @@ func Test_expectationService_Delete(t *testing.T) {
 			expErrorMsg: mok.ErrNotFound.Error(),
 		},
 		{
-			name: "error: endpoint not found",
+			name: "error: route not found",
 			req:  sampleReq,
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
 				serverStorageMock, serverMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t)
@@ -204,7 +204,7 @@ func Test_expectationService_Delete(t *testing.T) {
 					Once()
 
 				serverMock.
-					On("EndpointGet", mock.Anything, tc.req.GetEndpointUrl()).
+					On("RouteGet", mock.Anything, tc.req.GetRouteUrl()).
 					Return(nil, mok.ErrNotFound).
 					Once()
 
@@ -216,7 +216,7 @@ func Test_expectationService_Delete(t *testing.T) {
 			name: "error: expectation not found",
 			req:  sampleReq,
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {
-				serverStorageMock, serverMock, endpointMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewEndpointMock(t)
+				serverStorageMock, serverMock, routeMock := mocks.NewServerStorageMock(t), mocks.NewServerMock(t), mocks.NewRouteMock(t)
 
 				serverStorageMock.
 					On("ServerGet", mock.Anything, tc.req.GetServerName()).
@@ -224,11 +224,11 @@ func Test_expectationService_Delete(t *testing.T) {
 					Once()
 
 				serverMock.
-					On("EndpointGet", mock.Anything, tc.req.GetEndpointUrl()).
-					Return(endpointMock, nil).
+					On("RouteGet", mock.Anything, tc.req.GetRouteUrl()).
+					Return(routeMock, nil).
 					Once()
 
-				endpointMock.
+				routeMock.
 					On("ExpectationDelete", mock.Anything, tc.req.GetId()).
 					Return(mok.ErrNotFound).
 					Once()

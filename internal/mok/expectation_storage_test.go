@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_expectationStorage_EndpointGet(t *testing.T) {
+func Test_expectationStorage_RouteGet(t *testing.T) {
 	ctx := context.Background()
 	sampleExpectation := NewExpectation("sample")
 
@@ -53,7 +53,7 @@ func Test_expectationStorage_EndpointGet(t *testing.T) {
 	}
 }
 
-func Test_expectationStorage_EndpointCreate(t *testing.T) {
+func Test_expectationStorage_RouteCreate(t *testing.T) {
 	ctx := context.Background()
 	sampleExpectation := NewExpectation("sample")
 
@@ -99,7 +99,7 @@ func Test_expectationStorage_EndpointCreate(t *testing.T) {
 	}
 }
 
-func Test_expectationStorage_EndpointDelete(t *testing.T) {
+func Test_expectationStorage_RouteDelete(t *testing.T) {
 	ctx := context.Background()
 	sampleExpectation := NewExpectation("sample")
 

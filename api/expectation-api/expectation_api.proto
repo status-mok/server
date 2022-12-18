@@ -30,7 +30,7 @@ message CreateRequest {
     json_schema: {
       required: [
         "server_name",
-        "endpoint_url"
+        "route_url"
       ]
     }
   };
@@ -47,9 +47,9 @@ message CreateRequest {
       example: "\"http-server-8080\""
     }
   ];
-  // URL is a relative URI of the endpoint.
-  string endpoint_url = 2 [
-    json_name = "endpoint_url",
+  // URL is a relative URI of the route.
+  string route_url = 2 [
+    json_name = "route_url",
     (validate.rules).string.uri_ref = true,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,
@@ -79,7 +79,7 @@ message DeleteRequest {
     json_schema: {
       required: [
         "server_name",
-        "endpoint_url",
+        "route_url",
         "id"
       ]
     }
@@ -97,9 +97,9 @@ message DeleteRequest {
       example: "\"http-server-8080\""
     }
   ];
-  // URL is a relative URI of an endpoint.
-  string endpoint_url = 2 [
-    json_name = "endpoint_url",
+  // URL is a relative URI of an route.
+  string route_url = 2 [
+    json_name = "route_url",
     (validate.rules).string.uri_ref = true,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,

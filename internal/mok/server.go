@@ -19,7 +19,7 @@ var (
 )
 
 type Server interface {
-	EndpointStorage
+	RouteStorage
 
 	Addr() string
 	Name() string
@@ -30,7 +30,7 @@ type Server interface {
 }
 
 type server struct {
-	*endpointStorage
+	*routeStorage
 
 	name  string     `mapstructure:"name"`
 	ip    string     `mapstructure:"ip"`
@@ -47,7 +47,7 @@ type server struct {
 
 func NewServer(name, ip string, port uint32, serverType ServerType) *server {
 	return &server{
-		endpointStorage: NewEndpointStorage(),
+		routeStorage: NewRouteStorage(),
 
 		name:  name,
 		ip:    ip,

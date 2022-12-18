@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-type Endpoint interface {
+type Route interface {
 	ExpectationStorage
 
 	URL() string
@@ -12,19 +12,19 @@ type Endpoint interface {
 	// FindExpectation(ctx context.Context, req *http.Request) (err error)
 }
 
-type endpoint struct {
+type route struct {
 	*expectationStorage
 
-	url   string       `mapstructure:"url"`
-	_type EndpointType `mapstructure:"type"`
+	url   string    `mapstructure:"url"`
+	_type RouteType `mapstructure:"type"`
 
 	isDisabled bool
 
 	mu sync.Mutex
 }
 
-func NewEndpoint(url string, _type EndpointType) *endpoint {
-	return &endpoint{
+func NewRoute(url string, _type RouteType) *route {
+	return &route{
 		expectationStorage: NewExpectationStorage(),
 
 		url:   url,
@@ -32,6 +32,6 @@ func NewEndpoint(url string, _type EndpointType) *endpoint {
 	}
 }
 
-func (e *endpoint) URL() string {
+func (e *route) URL() string {
 	return e.url
 }

@@ -26,7 +26,7 @@ func (s expectationService) Create(ctx context.Context, req *expectationAPI.Crea
 		return nil, err
 	}
 
-	ept, err := srv.EndpointGet(ctx, req.GetEndpointUrl())
+	ept, err := srv.RouteGet(ctx, req.GetRouteUrl())
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (s expectationService) Create(ctx context.Context, req *expectationAPI.Crea
 	exp := mok.NewExpectation(req.GetId())
 
 	if err := ept.ExpectationCreate(ctx, exp); err != nil {
-		return nil, errors.Wrapf(err, "failed to create expectation '%s' for entrypoint '%s' on server '%s'", req.GetId(), req.GetEndpointUrl(), req.GetServerName())
+		return nil, errors.Wrapf(err, "failed to create expectation '%s' for route '%s' on server '%s'", req.GetId(), req.GetRouteUrl(), req.GetServerName())
 	}
 
 	return &expectationAPI.CreateResponse{Success: true}, nil
@@ -46,13 +46,13 @@ func (s expectationService) Delete(ctx context.Context, req *expectationAPI.Dele
 		return nil, err
 	}
 
-	ept, err := srv.EndpointGet(ctx, req.GetEndpointUrl())
+	ept, err := srv.RouteGet(ctx, req.GetRouteUrl())
 	if err != nil {
 		return nil, err
 	}
 
 	if err := ept.ExpectationDelete(ctx, req.GetId()); err != nil {
-		return nil, errors.Wrapf(err, "failed to delete expectation '%s' from entrypoint '%s' on server '%s'", req.GetId(), req.GetEndpointUrl(), req.GetServerName())
+		return nil, errors.Wrapf(err, "failed to delete expectation '%s' from route '%s' on server '%s'", req.GetId(), req.GetRouteUrl(), req.GetServerName())
 	}
 
 	return &expectationAPI.DeleteResponse{Success: true}, nil

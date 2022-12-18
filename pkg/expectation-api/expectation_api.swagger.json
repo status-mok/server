@@ -81,10 +81,10 @@
           "description": "Name is a unique identifier of the server.",
           "minLength": 1
         },
-        "endpoint_url": {
+        "route_url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of the endpoint.",
+          "description": "URL is a relative URI of the route.",
           "minLength": 1
         },
         "id": {
@@ -96,7 +96,7 @@
       },
       "required": [
         "server_name",
-        "endpoint_url"
+        "route_url"
       ]
     },
     "ExpectationServiceCreateResponse": {
@@ -116,10 +116,10 @@
           "description": "Name is a unique identifier of the server.",
           "minLength": 1
         },
-        "endpoint_url": {
+        "route_url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of an endpoint.",
+          "description": "URL is a relative URI of an route.",
           "minLength": 1
         },
         "id": {
@@ -131,7 +131,7 @@
       },
       "required": [
         "server_name",
-        "endpoint_url",
+        "route_url",
         "id"
       ]
     },

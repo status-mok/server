@@ -9,25 +9,25 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_endpointStorage_ServerGet(t *testing.T) {
+func Test_routeStorage_ServerGet(t *testing.T) {
 	ctx := context.Background()
-	sampleEndpoint := NewEndpoint("sample", EndpointTypeReqResp)
+	sampleRoute := NewRoute("sample", RouteTypeReqResp)
 
 	testCases := []struct {
 		name        string
-		endpointURL string
-		storage     *endpointStorage
+		routeURL    string
+		storage     *routeStorage
 		expErrorMsg string
 	}{
 		{
-			name:        "ok",
-			endpointURL: sampleEndpoint.URL(),
-			storage:     testEndpointStorage(10, sampleEndpoint),
+			name:     "ok",
+			routeURL: sampleRoute.URL(),
+			storage:  testRouteStorage(10, sampleRoute),
 		},
 		{
 			name:        "error: not found",
-			endpointURL: sampleEndpoint.URL(),
-			storage:     testEndpointStorage(10),
+			routeURL:    sampleRoute.URL(),
+			storage:     testRouteStorage(10),
 			expErrorMsg: ErrNotFound.Error(),
 		},
 	}
@@ -40,38 +40,38 @@ func Test_endpointStorage_ServerGet(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			ept, err := tc.storage.EndpointGet(ctx, tc.endpointURL)
+			ept, err := tc.storage.RouteGet(ctx, tc.routeURL)
 			if len(tc.expErrorMsg) > 0 {
 				require.Error(t, err)
 				assert.ErrorContains(t, err, tc.expErrorMsg)
 			} else {
 				require.NoError(t, err)
 				require.NotNil(t, ept)
-				require.Equal(t, tc.endpointURL, ept.URL())
+				require.Equal(t, tc.routeURL, ept.URL())
 			}
 		})
 	}
 }
 
-func Test_endpointStorage_ServerCreate(t *testing.T) {
+func Test_routeStorage_ServerCreate(t *testing.T) {
 	ctx := context.Background()
-	sampleEndpoint := NewEndpoint("sample", EndpointTypeReqResp)
+	sampleRoute := NewRoute("sample", RouteTypeReqResp)
 
 	testCases := []struct {
 		name        string
-		endpoint    *endpoint
-		storage     *endpointStorage
+		route       *route
+		storage     *routeStorage
 		expErrorMsg string
 	}{
 		{
-			name:     "ok",
-			endpoint: sampleEndpoint,
-			storage:  testEndpointStorage(10),
+			name:    "ok",
+			route:   sampleRoute,
+			storage: testRouteStorage(10),
 		},
 		{
 			name:        "fail: already exist",
-			endpoint:    sampleEndpoint,
-			storage:     testEndpointStorage(10, sampleEndpoint),
+			route:       sampleRoute,
+			storage:     testRouteStorage(10, sampleRoute),
 			expErrorMsg: ErrAlreadyExist.Error(),
 		},
 	}
@@ -86,7 +86,7 @@ func Test_endpointStorage_ServerCreate(t *testing.T) {
 
 			countServersBefore := len(tc.storage.storage)
 
-			err := tc.storage.EndpointCreate(ctx, tc.endpoint)
+			err := tc.storage.RouteCreate(ctx, tc.route)
 			if len(tc.expErrorMsg) > 0 {
 				require.Error(t, err)
 				assert.ErrorContains(t, err, tc.expErrorMsg)
@@ -99,25 +99,25 @@ func Test_endpointStorage_ServerCreate(t *testing.T) {
 	}
 }
 
-func Test_endpointStorage_ServerDelete(t *testing.T) {
+func Test_routeStorage_ServerDelete(t *testing.T) {
 	ctx := context.Background()
-	sampleEndpoint := NewEndpoint("sample", EndpointTypeReqResp)
+	sampleRoute := NewRoute("sample", RouteTypeReqResp)
 
 	testCases := []struct {
 		name        string
-		endpointURL string
-		storage     *endpointStorage
+		routeURL    string
+		storage     *routeStorage
 		expErrorMsg string
 	}{
 		{
-			name:        "ok",
-			endpointURL: sampleEndpoint.URL(),
-			storage:     testEndpointStorage(10, sampleEndpoint),
+			name:     "ok",
+			routeURL: sampleRoute.URL(),
+			storage:  testRouteStorage(10, sampleRoute),
 		},
 		{
 			name:        "fail: not found",
-			endpointURL: sampleEndpoint.URL(),
-			storage:     testEndpointStorage(10),
+			routeURL:    sampleRoute.URL(),
+			storage:     testRouteStorage(10),
 			expErrorMsg: ErrNotFound.Error(),
 		},
 	}
@@ -132,7 +132,7 @@ func Test_endpointStorage_ServerDelete(t *testing.T) {
 
 			countServersBefore := len(tc.storage.storage)
 
-			err := tc.storage.EndpointDelete(ctx, tc.endpointURL)
+			err := tc.storage.RouteDelete(ctx, tc.routeURL)
 			if len(tc.expErrorMsg) > 0 {
 				require.Error(t, err)
 				assert.ErrorContains(t, err, tc.expErrorMsg)
@@ -145,12 +145,12 @@ func Test_endpointStorage_ServerDelete(t *testing.T) {
 	}
 }
 
-func testEndpointStorage(n int, endpoints ...Endpoint) *endpointStorage {
-	s := NewEndpointStorage(endpoints...)
+func testRouteStorage(n int, routes ...Route) *routeStorage {
+	s := NewRouteStorage(routes...)
 
 	for i := 0; i < n; i++ {
 		url := fmt.Sprint(i)
-		s.storage[url] = NewEndpoint(url, EndpointTypeReqResp)
+		s.storage[url] = NewRoute(url, RouteTypeReqResp)
 	}
 
 	return s
