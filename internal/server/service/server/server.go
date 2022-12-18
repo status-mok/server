@@ -26,12 +26,15 @@ func (s serverService) Create(ctx context.Context, req *serverAPI.CreateRequest)
 		return nil, err
 	}
 
-	srv := mok.NewServer(
+	srv, err := mok.NewServer(
 		req.GetName(),
 		req.GetIp(),
 		req.GetPort(),
 		serverType,
 	)
+	if err != nil {
+		return nil, err
+	}
 
 	if err := s.storage.ServerCreate(ctx, srv); err != nil {
 		return nil, errors.Wrapf(err, "failed to create server '%s'", req.GetName())

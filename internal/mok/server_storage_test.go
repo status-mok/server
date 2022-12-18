@@ -11,7 +11,8 @@ import (
 
 func Test_serverStorage_ServerGet(t *testing.T) {
 	ctx := context.Background()
-	sampleServer := NewServer("sample", "", 0, ServerTypeHTTP)
+	sampleServer, err := NewServer("sample", "", 0, ServerTypeHTTP)
+	require.NoError(t, err)
 
 	testCases := []struct {
 		name        string
@@ -55,7 +56,8 @@ func Test_serverStorage_ServerGet(t *testing.T) {
 
 func Test_serverStorage_ServerCreate(t *testing.T) {
 	ctx := context.Background()
-	sampleServer := NewServer("sample", "", 0, ServerTypeHTTP)
+	sampleServer, err := NewServer("sample", "", 0, ServerTypeHTTP)
+	require.NoError(t, err)
 
 	testCases := []struct {
 		name        string
@@ -101,7 +103,8 @@ func Test_serverStorage_ServerCreate(t *testing.T) {
 
 func Test_serverStorage_ServerDelete(t *testing.T) {
 	ctx := context.Background()
-	sampleServer := NewServer("sample", "", 0, ServerTypeHTTP)
+	sampleServer, err := NewServer("sample", "", 0, ServerTypeHTTP)
+	require.NoError(t, err)
 
 	testCases := []struct {
 		name        string
@@ -149,8 +152,14 @@ func testServerStorage(n int, servers ...Server) *serverStorage {
 	s := NewServerStorage(servers...)
 
 	for i := 0; i < n; i++ {
-		name := fmt.Sprint(i)
-		s.storage[name] = NewServer(name, "", 0, ServerTypeHTTP)
+		srv, err := NewServer(fmt.Sprint(i), "", 0, ServerTypeHTTP)
+		if err != nil {
+			panic(err)
+		}
+
+		if err = s.ServerCreate(context.Background(), srv); err != nil {
+			panic(err)
+		}
 	}
 
 	return s

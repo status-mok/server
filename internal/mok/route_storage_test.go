@@ -11,7 +11,7 @@ import (
 
 func Test_routeStorage_ServerGet(t *testing.T) {
 	ctx := context.Background()
-	sampleRoute := NewRoute("sample", RouteTypeReqResp)
+	sampleRoute := NewRoute("/sample", RouteTypeReqResp)
 
 	testCases := []struct {
 		name        string
@@ -55,7 +55,7 @@ func Test_routeStorage_ServerGet(t *testing.T) {
 
 func Test_routeStorage_ServerCreate(t *testing.T) {
 	ctx := context.Background()
-	sampleRoute := NewRoute("sample", RouteTypeReqResp)
+	sampleRoute := NewRoute("/sample", RouteTypeReqResp)
 
 	testCases := []struct {
 		name        string
@@ -101,7 +101,7 @@ func Test_routeStorage_ServerCreate(t *testing.T) {
 
 func Test_routeStorage_ServerDelete(t *testing.T) {
 	ctx := context.Background()
-	sampleRoute := NewRoute("sample", RouteTypeReqResp)
+	sampleRoute := NewRoute("/sample", RouteTypeReqResp)
 
 	testCases := []struct {
 		name        string
@@ -130,27 +130,33 @@ func Test_routeStorage_ServerDelete(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			countServersBefore := len(tc.storage.storage)
+			countServersBefore := len(tc.storage.storageIndex)
 
 			err := tc.storage.RouteDelete(ctx, tc.routeURL)
 			if len(tc.expErrorMsg) > 0 {
 				require.Error(t, err)
 				assert.ErrorContains(t, err, tc.expErrorMsg)
-				require.Equal(t, countServersBefore, len(tc.storage.storage))
+				require.Equal(t, countServersBefore, len(tc.storage.storageIndex))
 			} else {
 				require.NoError(t, err)
-				require.Equal(t, countServersBefore-1, len(tc.storage.storage))
+				require.Equal(t, countServersBefore-1, len(tc.storage.storageIndex))
 			}
 		})
 	}
 }
 
 func testRouteStorage(n int, routes ...Route) *routeStorage {
-	s := NewRouteStorage(routes...)
+	ctx := context.Background()
+
+	s, err := NewRouteStorage(routes...)
+	if err != nil {
+		panic(err)
+	}
 
 	for i := 0; i < n; i++ {
-		url := fmt.Sprint(i)
-		s.storage[url] = NewRoute(url, RouteTypeReqResp)
+		if err = s.RouteCreate(ctx, NewRoute("/"+fmt.Sprint(i), RouteTypeReqResp)); err != nil {
+			panic(err)
+		}
 	}
 
 	return s

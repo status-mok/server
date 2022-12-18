@@ -37,12 +37,7 @@ func Test_serverService_Create(t *testing.T) {
 					On(
 						"ServerCreate",
 						mock.Anything,
-						mok.NewServer(
-							tc.req.GetName(),
-							tc.req.GetIp(),
-							tc.req.GetPort(),
-							mok.ServerType(tc.req.GetType().Number()),
-						),
+						mock.AnythingOfType("*mok.server"),
 					).
 					Return(nil).
 					Once()
@@ -60,12 +55,7 @@ func Test_serverService_Create(t *testing.T) {
 					On(
 						"ServerCreate",
 						mock.Anything,
-						mok.NewServer(
-							tc.req.GetName(),
-							tc.req.GetIp(),
-							tc.req.GetPort(),
-							mok.ServerType(tc.req.GetType().Number()),
-						),
+						mock.AnythingOfType("*mok.server"),
 					).
 					Return(mok.ErrAlreadyExist).
 					Once()

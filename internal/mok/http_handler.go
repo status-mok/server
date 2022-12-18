@@ -2,6 +2,7 @@ package mok
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httputil"
 
@@ -18,28 +19,34 @@ func (s *server) httpHandler(ctx context.Context) http.Handler {
 	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
 
-	mux.HandleFunc("/", s.httpHandlerFunc)
+	mux.Mount("/", serverHTTPHandler(s))
 
 	return mux
 }
 
-func (s *server) httpHandlerFunc(_ http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
+func serverHTTPHandler(s *server) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
 
-	// 1 log request
-	req, err := httputil.DumpRequest(r, true)
-	if err != nil {
-		log.L(ctx).With(
-			"server", s.Name(),
-		).Debug("failed to dump request")
-	} else {
-		log.L(ctx).With(
-			"server", s.Name(),
-			"request", string(req),
-		).Debug("request dump")
-	}
+		// 1 log request
+		req, err := httputil.DumpRequest(r, true)
+		if err != nil {
+			log.L(ctx).With(
+				"server", s.Name(),
+			).Debug("failed to dump request")
+		} else {
+			log.L(ctx).With(
+				"server", s.Name(),
+				"request", string(req),
+			).Debug("request dump")
+		}
 
-	// 2 find route
-	// 3 decide if request match any route mock
-	// 4 respond
+		s.httpMux.ServeHTTP(w, r)
+	})
+}
+
+func routeHTTPHandler(rt Route) http.Handler {
+	return http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
+		fmt.Println(rt)
+	})
 }

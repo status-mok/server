@@ -16,6 +16,7 @@ func Test_routeService_Create(t *testing.T) {
 	ctx := context.Background()
 	sampleReq := &routeAPI.CreateRequest{
 		ServerName: "sample",
+		Url:        "/sample-url",
 		Type:       routeAPI.RouteType_ROUTE_TYPE_REQ_RESP,
 	}
 
@@ -89,6 +90,7 @@ func Test_routeService_Create(t *testing.T) {
 			name: "error: invalid route type",
 			req: &routeAPI.CreateRequest{
 				ServerName: "sample",
+				Url:        "/sample-url",
 				Type:       routeAPI.RouteType_ROUTE_TYPE_UNSPECIFIED,
 			},
 			setupMocks: func(t *testing.T, tc *testCase) *mocks.ServerStorageMock {

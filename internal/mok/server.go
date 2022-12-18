@@ -45,9 +45,14 @@ type server struct {
 	mu sync.Mutex
 }
 
-func NewServer(name, ip string, port uint32, serverType ServerType) *server {
+func NewServer(name, ip string, port uint32, serverType ServerType) (*server, error) {
+	rts, err := NewRouteStorage()
+	if err != nil {
+		return nil, err
+	}
+
 	return &server{
-		routeStorage: NewRouteStorage(),
+		routeStorage: rts,
 
 		name:  name,
 		ip:    ip,
@@ -55,7 +60,7 @@ func NewServer(name, ip string, port uint32, serverType ServerType) *server {
 		_type: serverType,
 
 		status: ServerStatusStopped,
-	}
+	}, nil
 }
 
 func (s *server) Addr() string {
