@@ -1,3 +1,5 @@
+//go:build e2e
+
 package server_api_test
 
 import (
