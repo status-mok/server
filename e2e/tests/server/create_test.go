@@ -1,17 +1,13 @@
 //go:build e2e
 
-package server_api_test
+package server_test
 
 import (
-	"context"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/status-mok/server/e2e/server"
 	serverAPI "github.com/status-mok/server/pkg/server-api"
 )
-
-var ctx = context.Background()
 
 var _ = Describe("Create method", Ordered, func() {
 	var srv *server.TestServer
@@ -34,7 +30,7 @@ var _ = Describe("Create method", Ordered, func() {
 		Expect(resp.Success).To(BeTrue())
 	})
 
-	Context("request validation issues", func() {
+	Context("with request validation issues", func() {
 		When("name is empty", func() {
 			It("should return a validation error", func() {
 				resp, err := srv.ServerGRPCClient().Create(ctx, &serverAPI.CreateRequest{
