@@ -9,18 +9,24 @@ import (
 	serverAPI "github.com/status-mok/server/pkg/server-api"
 )
 
-var _ = Describe("Start method", Ordered, func() {
+var _ = Describe("Stop method", Ordered, func() {
 	var srv *server.TestServer
 	serverName := "123"
 
 	BeforeAll(func() {
 		srv = server.NewServer()
-		resp, err := srv.ServerGRPCClient().Create(ctx, &serverAPI.CreateRequest{
+		respC, err := srv.ServerGRPCClient().Create(ctx, &serverAPI.CreateRequest{
 			Name: serverName,
 			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
 		})
 		Expect(err).To(BeNil())
-		Expect(resp.Success).To(BeTrue())
+		Expect(respC.Success).To(BeTrue())
+
+		respS, err := srv.ServerGRPCClient().Start(ctx, &serverAPI.StartRequest{
+			Name: serverName,
+		})
+		Expect(err).To(BeNil())
+		Expect(respS.Success).To(BeTrue())
 	})
 
 	AfterAll(func() {
@@ -28,7 +34,7 @@ var _ = Describe("Start method", Ordered, func() {
 	})
 
 	It("should finish successfully", func() {
-		resp, err := srv.ServerGRPCClient().Start(ctx, &serverAPI.StartRequest{
+		resp, err := srv.ServerGRPCClient().Stop(ctx, &serverAPI.StopRequest{
 			Name: serverName,
 		})
 
@@ -36,20 +42,20 @@ var _ = Describe("Start method", Ordered, func() {
 		Expect(resp.Success).To(BeTrue())
 	})
 
-	When("server is already running", func() {
-		It("should return a 'already running' error", func() {
-			resp, err := srv.ServerGRPCClient().Start(ctx, &serverAPI.StartRequest{
+	When("server is already stopped", func() {
+		It("should return a 'already stopped' error", func() {
+			resp, err := srv.ServerGRPCClient().Stop(ctx, &serverAPI.StopRequest{
 				Name: serverName,
 			})
 
 			Expect(resp).To(BeNil())
-			Expect(err.Error()).To(ContainSubstring("already running"))
+			Expect(err.Error()).To(ContainSubstring("already stopped"))
 		})
 	})
 
 	When("server does not exist", func() {
 		It("should return a 'not found' error", func() {
-			resp, err := srv.ServerGRPCClient().Start(ctx, &serverAPI.StartRequest{
+			resp, err := srv.ServerGRPCClient().Stop(ctx, &serverAPI.StopRequest{
 				Name: "not exist",
 			})
 
@@ -61,12 +67,12 @@ var _ = Describe("Start method", Ordered, func() {
 	Context("with request validation issues", func() {
 		When("name is empty", func() {
 			It("should return a validation error", func() {
-				resp, err := srv.ServerGRPCClient().Start(ctx, &serverAPI.StartRequest{
+				resp, err := srv.ServerGRPCClient().Stop(ctx, &serverAPI.StopRequest{
 					Name: "",
 				})
 
 				Expect(resp).To(BeNil())
-				Expect(err.Error()).To(ContainSubstring("invalid StartRequest.Name"))
+				Expect(err.Error()).To(ContainSubstring("invalid StopRequest.Name"))
 			})
 		})
 	})
