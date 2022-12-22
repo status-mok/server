@@ -20,19 +20,8 @@ var _ = Describe("Delete method", Ordered, func() {
 	BeforeAll(func() {
 		srv = app.NewAppServer()
 
-		resp, err := srv.GRPCClient().ServerService().Create(ctx, &serverAPI.CreateRequest{
-			Name: serverNameForGRPC,
-			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
-		})
+		err := srv.CreateStoppedServers(ctx, serverNameForGRPC, serverNameForHTTP)
 		Expect(err).To(BeNil())
-		Expect(resp.Success).To(BeTrue())
-
-		resp, err = srv.GRPCClient().ServerService().Create(ctx, &serverAPI.CreateRequest{
-			Name: serverNameForHTTP,
-			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
-		})
-		Expect(err).To(BeNil())
-		Expect(resp.Success).To(BeTrue())
 	})
 
 	AfterAll(func() {

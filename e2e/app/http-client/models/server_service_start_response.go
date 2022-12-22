@@ -20,7 +20,7 @@ import (
 type ServerServiceStartResponse struct {
 
 	// address
-	// Example: 0.0.0.0:8080
+	// Example: 127.0.0.1:8080
 	// Min Length: 1
 	Address string `json:"address,omitempty"`
 

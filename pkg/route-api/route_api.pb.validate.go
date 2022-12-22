@@ -68,11 +68,10 @@ func (m *CreateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, err := url.Parse(m.GetUrl()); err != nil {
-		err = CreateRequestValidationError{
+	if !_CreateRequest_Url_Pattern.MatchString(m.GetUrl()) {
+		err := CreateRequestValidationError{
 			field:  "Url",
-			reason: "value must be a valid URI",
-			cause:  err,
+			reason: "value does not match regex pattern \"^(\\\\/[^/?]+)+\\\\/?$\"",
 		}
 		if !all {
 			return err
@@ -168,6 +167,8 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateRequestValidationError{}
+
+var _CreateRequest_Url_Pattern = regexp.MustCompile("^(\\/[^/?]+)+\\/?$")
 
 // Validate checks the field values on CreateResponse with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -304,11 +305,10 @@ func (m *DeleteRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, err := url.Parse(m.GetUrl()); err != nil {
-		err = DeleteRequestValidationError{
+	if !_DeleteRequest_Url_Pattern.MatchString(m.GetUrl()) {
+		err := DeleteRequestValidationError{
 			field:  "Url",
-			reason: "value must be a valid URI",
-			cause:  err,
+			reason: "value does not match regex pattern \"^(\\\\/[^/?]+)+\\\\/?$\"",
 		}
 		if !all {
 			return err
@@ -393,6 +393,8 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteRequestValidationError{}
+
+var _DeleteRequest_Url_Pattern = regexp.MustCompile("^(\\/[^/?]+)+\\/?$")
 
 // Validate checks the field values on DeleteResponse with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

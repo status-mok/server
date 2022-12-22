@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"strings"
 
 	"github.com/status-mok/server/internal/mok"
 	"github.com/status-mok/server/internal/pkg/errors"
@@ -61,9 +62,11 @@ func (s serverService) Start(ctx context.Context, req *serverAPI.StartRequest) (
 		return nil, errors.Wrapf(err, "failed to start server '%s'", req.GetName())
 	}
 
+	addr := strings.Replace(srv.Addr(), "[::]", "127.0.0.1", 1)
+
 	return &serverAPI.StartResponse{
 		Success: true,
-		Address: srv.Addr(),
+		Address: addr,
 	}, nil
 }
 

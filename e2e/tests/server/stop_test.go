@@ -19,31 +19,9 @@ var _ = Describe("Stop method", Ordered, func() {
 
 	BeforeAll(func() {
 		srv = app.NewAppServer()
-		respC, err := srv.GRPCClient().ServerService().Create(ctx, &serverAPI.CreateRequest{
-			Name: serverNameForGRPC,
-			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
-		})
-		Expect(err).To(BeNil())
-		Expect(respC.Success).To(BeTrue())
 
-		respS, err := srv.GRPCClient().ServerService().Start(ctx, &serverAPI.StartRequest{
-			Name: serverNameForGRPC,
-		})
+		_, err := srv.CreateRunningServers(ctx, serverNameForGRPC, serverNameForHTTP)
 		Expect(err).To(BeNil())
-		Expect(respS.Success).To(BeTrue())
-
-		respC, err = srv.GRPCClient().ServerService().Create(ctx, &serverAPI.CreateRequest{
-			Name: serverNameForHTTP,
-			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
-		})
-		Expect(err).To(BeNil())
-		Expect(respC.Success).To(BeTrue())
-
-		respS, err = srv.GRPCClient().ServerService().Start(ctx, &serverAPI.StartRequest{
-			Name: serverNameForHTTP,
-		})
-		Expect(err).To(BeNil())
-		Expect(respS.Success).To(BeTrue())
 	})
 
 	AfterAll(func() {

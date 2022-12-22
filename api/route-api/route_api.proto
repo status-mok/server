@@ -72,7 +72,7 @@ message CreateRequest {
   // URL is a relative URI of the route.
   string url = 2 [
     json_name = "url",
-    (validate.rules).string.uri_ref = true,
+    (validate.rules).string.pattern = "^(\\/[^/?]+)+\\/?$",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,
       example: "\"/some-url\""
@@ -121,7 +121,7 @@ message DeleteRequest {
   // URL is a relative URI of the route.
   string url = 2 [
     json_name = "url",
-    (validate.rules).string.uri_ref = true,
+    (validate.rules).string.pattern = "^(\\/[^/?]+)+\\/?$",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,
       example: "\"/some-url\""

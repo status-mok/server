@@ -190,7 +190,7 @@ message StartResponse {
     json_name = "address",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       min_length: 1,
-      example: "\"0.0.0.0:8080\""
+      example: "\"127.0.0.1:8080\""
     }
   ];
 }
