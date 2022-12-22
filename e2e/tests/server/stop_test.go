@@ -49,7 +49,7 @@ var _ = Describe("Stop method", Ordered, func() {
 			})
 		})
 
-		When("app does not exist", func() {
+		When("server does not exist", func() {
 			It("should return a 'not found' error", func() {
 				resp, err := srv.GRPCClient().ServerService().Stop(ctx, &serverAPI.StopRequest{
 					Name: "not exist",
@@ -102,7 +102,7 @@ var _ = Describe("Stop method", Ordered, func() {
 			})
 		})
 
-		When("app does not exist", func() {
+		When("server does not exist", func() {
 			It("should return a 'not found' error", func() {
 				resp, err := srv.HTTPClient().ServerService().ServerServiceStop(&serverHTTPapi.ServerServiceStopParams{
 					Body: &models.ServerServiceStopRequest{

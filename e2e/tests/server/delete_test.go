@@ -38,7 +38,7 @@ var _ = Describe("Delete method", Ordered, func() {
 			Expect(resp.Success).To(BeTrue())
 		})
 
-		When("app does not exist", func() {
+		When("server does not exist", func() {
 			It("should return a 'not found' error", func() {
 				resp, err := srv.GRPCClient().ServerService().Delete(ctx, &serverAPI.DeleteRequest{
 					Name: serverNameForGRPC,
@@ -77,7 +77,7 @@ var _ = Describe("Delete method", Ordered, func() {
 			Expect(resp.GetPayload().Success).To(BeTrue())
 		})
 
-		When("app does not exist", func() {
+		When("server does not exist", func() {
 			It("should return a 'not found' error", func() {
 				resp, err := srv.HTTPClient().ServerService().ServerServiceDelete(&serverHTTPapi.ServerServiceDeleteParams{
 					Body: &models.ServerServiceDeleteRequest{
