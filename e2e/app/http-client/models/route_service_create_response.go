@@ -18,6 +18,7 @@ import (
 type RouteServiceCreateResponse struct {
 
 	// success
+	// Example: true
 	Success bool `json:"success,omitempty"`
 }
 

@@ -86,7 +86,10 @@ message CreateRequest {
 }
 
 message CreateResponse {
-  bool success = 1 [json_name = "success"];
+  bool success = 1 [
+    json_name = "success",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
+  ];
 }
 
 message DeleteRequest {

@@ -127,7 +127,8 @@
       "type": "object",
       "properties": {
         "success": {
-          "type": "boolean"
+          "type": "boolean",
+          "example": true
         }
       }
     },

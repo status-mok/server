@@ -18,6 +18,7 @@ import (
 type ExpectationServiceCreateResponse struct {
 
 	// success
+	// Example: true
 	Success bool `json:"success,omitempty"`
 }
 
