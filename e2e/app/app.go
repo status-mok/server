@@ -1,17 +1,15 @@
 //go:build e2e
 
-package server
+package app
 
 import (
 	"context"
 	"fmt"
 
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/status-mok/server/internal/pkg/tester"
 	"github.com/status-mok/server/internal/server/app"
 	"github.com/status-mok/server/internal/server/config"
-	expectationAPI "github.com/status-mok/server/pkg/expectation-api"
-	routeAPI "github.com/status-mok/server/pkg/route-api"
-	serverAPI "github.com/status-mok/server/pkg/server-api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,15 +18,17 @@ type application interface {
 	Run(ctx context.Context) error
 }
 
-type TestServer struct {
+type TestAppServer struct {
 	app  application
 	conf *config.AppConfig
 
-	grpcConn  *grpc.ClientConn
+	grpcClient *grpcClient
+	httpClient *httpClient
+
 	ctxCancel func()
 }
 
-func NewServer() *TestServer {
+func NewAppServer() *TestAppServer {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	a, err := app.NewApp(ctx, "")
@@ -56,29 +56,26 @@ func NewServer() *TestServer {
 		panic(err)
 	}
 
-	return &TestServer{
+	return &TestAppServer{
 		app:  a,
 		conf: conf,
 
-		grpcConn:  conn,
+		grpcClient: NewGRPCClient(conn),
+		httpClient: NewHTTPClient(httptransport.New(conf.AdminHTTPAddress(), "", []string{"http"})),
+
 		ctxCancel: cancel,
 	}
 }
 
-func (s *TestServer) Close() {
-	_ = s.grpcConn.Close()
+func (s *TestAppServer) Close() {
 	s.ctxCancel()
 	return
 }
 
-func (s *TestServer) ServerGRPCClient() serverAPI.ServerServiceClient {
-	return serverAPI.NewServerServiceClient(s.grpcConn)
+func (s *TestAppServer) GRPCClient() *grpcClient {
+	return s.grpcClient
 }
 
-func (s *TestServer) RouteGRPCClient() routeAPI.RouteServiceClient {
-	return routeAPI.NewRouteServiceClient(s.grpcConn)
-}
-
-func (s *TestServer) ExpectationGRPCClient() expectationAPI.ExpectationServiceClient {
-	return expectationAPI.NewExpectationServiceClient(s.grpcConn)
+func (s *TestAppServer) HTTPClient() *httpClient {
+	return s.httpClient
 }

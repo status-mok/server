@@ -7,6 +7,21 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
 
 option go_package = "github.com/status-mok/server/pkg/server-api;server_api";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  responses: {
+    key: "default";
+    value: {
+      schema: {
+        json_schema: {ref: ".google.rpc.Status"}
+        example: "{\"code\":5,\"message\":\"not found\"}"
+      }
+    }
+  }
+};
 
 service ServerService {
   // Create
@@ -204,3 +219,22 @@ message StopResponse {
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field).example = "true"
   ];
 }
+
+//message ErrorResponse {
+//  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+//    json_schema: {
+//      required: ["code"]
+//    }
+//  };
+//
+//  int32 code = 1 [json_name = "code"];
+//  string message = 2 [json_name = "msg"];
+//  map<string, string> meta = 3 [json_name = "meta"];
+//}
+
+//
+//{
+//"code": 5,
+//    "message": "failed to get server 'http-server-8080': rpc error: code = NotFound desc = not found",
+//    "details": []
+//    }

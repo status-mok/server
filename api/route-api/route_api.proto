@@ -7,6 +7,21 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
 
 option go_package = "github.com/status-mok/server/pkg/route-api;route_api";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  responses: {
+    key: "default";
+    value: {
+      schema: {
+        json_schema: {ref: ".google.rpc.Status"}
+        example: "{\"code\":5,\"message\":\"not found\"}"
+      }
+    }
+  }
+};
 
 service RouteService {
   // Create

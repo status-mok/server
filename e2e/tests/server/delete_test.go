@@ -5,18 +5,30 @@ package server_test
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/status-mok/server/e2e/server"
+	"github.com/status-mok/server/e2e/app"
+	serverHTTPapi "github.com/status-mok/server/e2e/app/http-client/client/server_api/server_service"
+	"github.com/status-mok/server/e2e/app/http-client/models"
+	"github.com/status-mok/server/internal/pkg/tester"
 	serverAPI "github.com/status-mok/server/pkg/server-api"
 )
 
 var _ = Describe("Delete method", Ordered, func() {
-	var srv *server.TestServer
-	serverName := "123"
+	var srv *app.TestAppServer
+	serverNameForGRPC := "grpc-123"
+	serverNameForHTTP := "http-123"
 
 	BeforeAll(func() {
-		srv = server.NewServer()
-		resp, err := srv.ServerGRPCClient().Create(ctx, &serverAPI.CreateRequest{
-			Name: serverName,
+		srv = app.NewAppServer()
+
+		resp, err := srv.GRPCClient().ServerService().Create(ctx, &serverAPI.CreateRequest{
+			Name: serverNameForGRPC,
+			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
+		})
+		Expect(err).To(BeNil())
+		Expect(resp.Success).To(BeTrue())
+
+		resp, err = srv.GRPCClient().ServerService().Create(ctx, &serverAPI.CreateRequest{
+			Name: serverNameForHTTP,
 			Type: serverAPI.ServerType_SERVER_TYPE_HTTP,
 		})
 		Expect(err).To(BeNil())
@@ -27,35 +39,82 @@ var _ = Describe("Delete method", Ordered, func() {
 		srv.Close()
 	})
 
-	It("should finish successfully", func() {
-		resp, err := srv.ServerGRPCClient().Delete(ctx, &serverAPI.DeleteRequest{
-			Name: serverName,
-		})
-
-		Expect(err).To(BeNil())
-		Expect(resp.Success).To(BeTrue())
-	})
-
-	When("server does not exist", func() {
-		It("should return a 'not found' error", func() {
-			resp, err := srv.ServerGRPCClient().Delete(ctx, &serverAPI.DeleteRequest{
-				Name: serverName,
+	Context("GRPC", func() {
+		It("should finish successfully", func() {
+			resp, err := srv.GRPCClient().ServerService().Delete(ctx, &serverAPI.DeleteRequest{
+				Name: serverNameForGRPC,
 			})
 
-			Expect(resp).To(BeNil())
-			Expect(err.Error()).To(ContainSubstring("not found"))
+			Expect(err).To(BeNil())
+			Expect(resp.Success).To(BeTrue())
 		})
-	})
 
-	Context("with request validation issues", func() {
-		When("name is empty", func() {
-			It("should return a validation error", func() {
-				resp, err := srv.ServerGRPCClient().Delete(ctx, &serverAPI.DeleteRequest{
-					Name: "",
+		When("app does not exist", func() {
+			It("should return a 'not found' error", func() {
+				resp, err := srv.GRPCClient().ServerService().Delete(ctx, &serverAPI.DeleteRequest{
+					Name: serverNameForGRPC,
 				})
 
 				Expect(resp).To(BeNil())
-				Expect(err.Error()).To(ContainSubstring("invalid DeleteRequest.Name"))
+				Expect(err.Error()).To(ContainSubstring("not found"))
+			})
+		})
+
+		Context("with request validation issues", func() {
+			When("name is empty", func() {
+				It("should return a validation error", func() {
+					resp, err := srv.GRPCClient().ServerService().Delete(ctx, &serverAPI.DeleteRequest{
+						Name: "",
+					})
+
+					Expect(resp).To(BeNil())
+					Expect(err.Error()).To(ContainSubstring("invalid DeleteRequest.Name"))
+				})
+			})
+		})
+	})
+
+	Context("HTTP", func() {
+		It("should finish successfully", func() {
+			resp, err := srv.HTTPClient().ServerService().ServerServiceDelete(&serverHTTPapi.ServerServiceDeleteParams{
+				Body: &models.ServerServiceDeleteRequest{
+					Name: tester.StringPtr(serverNameForHTTP),
+				},
+				Context: ctx,
+			})
+
+			Expect(err).To(BeNil())
+			Expect(resp.IsSuccess()).To(BeTrue())
+			Expect(resp.GetPayload().Success).To(BeTrue())
+		})
+
+		When("app does not exist", func() {
+			It("should return a 'not found' error", func() {
+				resp, err := srv.HTTPClient().ServerService().ServerServiceDelete(&serverHTTPapi.ServerServiceDeleteParams{
+					Body: &models.ServerServiceDeleteRequest{
+						Name: tester.StringPtr(serverNameForHTTP),
+					},
+					Context: ctx,
+				})
+
+				Expect(resp).To(BeNil())
+				Expect(err.Error()).To(ContainSubstring("not found"))
+			})
+		})
+
+		Context("with request validation issues", func() {
+			When("name is empty", func() {
+				It("should return a validation error", func() {
+					resp, err := srv.HTTPClient().ServerService().ServerServiceDelete(&serverHTTPapi.ServerServiceDeleteParams{
+						Body: &models.ServerServiceDeleteRequest{
+							Name: tester.StringPtr(""),
+						},
+						Context: ctx,
+					})
+
+					Expect(resp).To(BeNil())
+					Expect(err.Error()).To(ContainSubstring("invalid DeleteRequest.Name"))
+				})
 			})
 		})
 	})

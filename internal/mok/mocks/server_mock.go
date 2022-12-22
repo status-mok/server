@@ -42,13 +42,13 @@ func (_m *ServerMock) Name() string {
 	return r0
 }
 
-// RouteCreate provides a mock function with given fields: ctx, ept
-func (_m *ServerMock) RouteCreate(ctx context.Context, ept mok.Route) error {
-	ret := _m.Called(ctx, ept)
+// RouteCreate provides a mock function with given fields: ctx, rt
+func (_m *ServerMock) RouteCreate(ctx context.Context, rt mok.Route) error {
+	ret := _m.Called(ctx, rt)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, mok.Route) error); ok {
-		r0 = rf(ctx, ept)
+		r0 = rf(ctx, rt)
 	} else {
 		r0 = ret.Error(0)
 	}
