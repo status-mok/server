@@ -19,20 +19,20 @@ import (
 // swagger:model ServerServiceCreateRequest
 type ServerServiceCreateRequest struct {
 
-	// The server shall listen to this IP address.
+	// The mock server shall bind to this IP address.
 	// Example: 0.0.0.0
 	// Min Length: 1
 	IP string `json:"ip,omitempty"`
 
-	// Name is a unique identifier of the server.
+	// Name is a unique identifier of the mock server.
 	// Example: http-server-8080
 	// Required: true
 	// Min Length: 1
 	Name *string `json:"name"`
 
-	// The server shall listen to this port.
+	// The mock server shall listen to this port. If the port is 0, then a random port will be specified on server start.
 	//
-	// The server type.
+	// The mock server type.
 	// Example: 8080
 	// Required: true
 	// Maximum: 65535

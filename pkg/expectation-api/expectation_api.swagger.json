@@ -102,13 +102,13 @@
         "server_name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Server name is a unique identifier of the mock server.",
           "minLength": 1
         },
         "route_url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of the route.",
+          "description": "Route URL is a relative URI of the route.",
           "minLength": 1
         },
         "id": {
@@ -137,13 +137,13 @@
         "server_name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Server name is a unique identifier of the mock server.",
           "minLength": 1
         },
         "route_url": {
           "type": "string",
           "example": "/some-url",
-          "description": "URL is a relative URI of an route.",
+          "description": "Route URL is a relative URI of an route.",
           "minLength": 1
         },
         "id": {

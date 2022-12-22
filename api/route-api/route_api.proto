@@ -57,7 +57,7 @@ message CreateRequest {
     }
   };
 
-  // Name is a unique identifier of the server.
+  // Server name is a unique identifier of the mock server.
   string server_name = 1 [
     json_name = "server_name",
     (validate.rules).string = {
@@ -103,7 +103,7 @@ message DeleteRequest {
     }
   };
 
-  // Name is a unique identifier of the server.
+  // Server name is a unique identifier of the mock server.
   string server_name = 1 [
     json_name = "server_name",
     (validate.rules).string = {

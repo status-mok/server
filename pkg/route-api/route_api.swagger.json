@@ -102,7 +102,7 @@
         "server_name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Server name is a unique identifier of the mock server.",
           "minLength": 1
         },
         "url": {
@@ -136,7 +136,7 @@
         "server_name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Server name is a unique identifier of the mock server.",
           "minLength": 1
         },
         "url": {

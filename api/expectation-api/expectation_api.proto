@@ -50,7 +50,7 @@ message CreateRequest {
     }
   };
 
-  // Name is a unique identifier of the server.
+  // Server name is a unique identifier of the mock server.
   string server_name = 1 [
     json_name = "server_name",
     (validate.rules).string = {
@@ -62,7 +62,7 @@ message CreateRequest {
       example: "\"http-server-8080\""
     }
   ];
-  // URL is a relative URI of the route.
+  // Route URL is a relative URI of the route.
   string route_url = 2 [
     json_name = "route_url",
     (validate.rules).string.uri_ref = true,
@@ -100,7 +100,7 @@ message DeleteRequest {
     }
   };
 
-  // Name is a unique identifier of the server.
+  // Server name is a unique identifier of the mock server.
   string server_name = 1 [
     json_name = "server_name",
     (validate.rules).string = {
@@ -112,7 +112,7 @@ message DeleteRequest {
       example: "\"http-server-8080\""
     }
   ];
-  // URL is a relative URI of an route.
+  // Route URL is a relative URI of an route.
   string route_url = 2 [
     json_name = "route_url",
     (validate.rules).string.uri_ref = true,

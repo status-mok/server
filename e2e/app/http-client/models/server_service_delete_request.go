@@ -19,7 +19,7 @@ import (
 // swagger:model ServerServiceDeleteRequest
 type ServerServiceDeleteRequest struct {
 
-	// Name is a unique identifier of the server.
+	// Name is a unique identifier of the mock server.
 	// Example: http-server-8080
 	// Required: true
 	// Min Length: 1

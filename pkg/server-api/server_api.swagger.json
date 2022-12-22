@@ -176,20 +176,20 @@
         "name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Name is a unique identifier of the mock server.",
           "minLength": 1
         },
         "ip": {
           "type": "string",
           "example": "0.0.0.0",
-          "description": "The server shall listen to this IP address.",
+          "description": "The mock server shall bind to this IP address.",
           "minLength": 1
         },
         "port": {
           "type": "integer",
           "format": "int64",
           "example": 8080,
-          "description": "The server shall listen to this port.\n\nThe server type.",
+          "description": "The mock server shall listen to this port. If the port is 0, then a random port will be specified on server start.\n\nThe mock server type.",
           "maximum": 65535
         },
         "type": {
@@ -217,7 +217,7 @@
         "name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Name is a unique identifier of the mock server.",
           "minLength": 1
         }
       },
@@ -252,7 +252,7 @@
         "name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Name is a unique identifier of the mock server.",
           "minLength": 1
         }
       },
@@ -280,7 +280,7 @@
         "name": {
           "type": "string",
           "example": "http-server-8080",
-          "description": "Name is a unique identifier of the server.",
+          "description": "Name is a unique identifier of the mock server.",
           "minLength": 1
         }
       },

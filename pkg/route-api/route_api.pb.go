@@ -77,7 +77,7 @@ type CreateRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Name is a unique identifier of the server.
+	// Server name is a unique identifier of the mock server.
 	ServerName string `protobuf:"bytes,1,opt,name=server_name,proto3" json:"server_name,omitempty"`
 	// URL is a relative URI of the route.
 	Url string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"` // The route type.
@@ -191,7 +191,7 @@ type DeleteRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Name is a unique identifier of the server.
+	// Server name is a unique identifier of the mock server.
 	ServerName string `protobuf:"bytes,1,opt,name=server_name,proto3" json:"server_name,omitempty"`
 	// URL is a relative URI of the route.
 	Url string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`

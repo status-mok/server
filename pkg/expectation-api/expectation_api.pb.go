@@ -28,9 +28,9 @@ type CreateRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Name is a unique identifier of the server.
+	// Server name is a unique identifier of the mock server.
 	ServerName string `protobuf:"bytes,1,opt,name=server_name,proto3" json:"server_name,omitempty"`
-	// URL is a relative URI of the route.
+	// Route URL is a relative URI of the route.
 	RouteUrl string `protobuf:"bytes,2,opt,name=route_url,proto3" json:"route_url,omitempty"`
 	// ID is a unique identifier of expectation.
 	Id *string `protobuf:"bytes,3,opt,name=id,proto3,oneof" json:"id,omitempty"`
@@ -141,9 +141,9 @@ type DeleteRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Name is a unique identifier of the server.
+	// Server name is a unique identifier of the mock server.
 	ServerName string `protobuf:"bytes,1,opt,name=server_name,proto3" json:"server_name,omitempty"`
-	// URL is a relative URI of an route.
+	// Route URL is a relative URI of an route.
 	RouteUrl string `protobuf:"bytes,2,opt,name=route_url,proto3" json:"route_url,omitempty"`
 	// ID is a unique identifier of an expectation.
 	Id string `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`

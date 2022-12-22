@@ -25,13 +25,13 @@ type ExpectationServiceDeleteRequest struct {
 	// Min Length: 1
 	ID *string `json:"id"`
 
-	// URL is a relative URI of an route.
+	// Route URL is a relative URI of an route.
 	// Example: /some-url
 	// Required: true
 	// Min Length: 1
 	RouteURL *string `json:"route_url"`
 
-	// Name is a unique identifier of the server.
+	// Server name is a unique identifier of the mock server.
 	// Example: http-server-8080
 	// Required: true
 	// Min Length: 1
