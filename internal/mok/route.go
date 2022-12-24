@@ -8,6 +8,7 @@ type Route interface {
 	ExpectationStorage
 
 	URL() string
+	Type() RouteType
 
 	// FindExpectation(ctx context.Context, req *http.Request) (err error)
 }
@@ -34,4 +35,8 @@ func NewRoute(url string, _type RouteType) *route {
 
 func (e *route) URL() string {
 	return e.url
+}
+
+func (e *route) Type() RouteType {
+	return e._type
 }

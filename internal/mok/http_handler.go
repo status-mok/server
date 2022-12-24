@@ -46,7 +46,17 @@ func serverHTTPHandler(s *server) http.Handler {
 }
 
 func routeHTTPHandler(rt Route) http.Handler {
-	return http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		fmt.Println(rt)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		exp, err := rt.ExpectationFindMatch(r.Context(), rt.Type(), r)
+		if err != nil {
+			notFoundResponse(w)
+			return
+		}
+
+		fmt.Println(exp)
 	})
+}
+
+func notFoundResponse(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNotFound)
 }
