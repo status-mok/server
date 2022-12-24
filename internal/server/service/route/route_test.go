@@ -39,10 +39,10 @@ func Test_routeService_Create(t *testing.T) {
 					Return(serverMock, nil).
 					Once()
 
-				ept := mok.NewRoute(tc.req.GetUrl(), mok.RouteType(tc.req.GetType().Number()))
+				rt := mok.NewRoute(tc.req.GetUrl(), mok.RouteType(tc.req.GetType().Number()))
 
 				serverMock.
-					On("RouteCreate", mock.Anything, ept).
+					On("RouteCreate", mock.Anything, rt).
 					Return(nil).
 					Once()
 
@@ -75,10 +75,10 @@ func Test_routeService_Create(t *testing.T) {
 					Return(serverMock, nil).
 					Once()
 
-				ept := mok.NewRoute(tc.req.GetUrl(), mok.RouteType(tc.req.GetType().Number()))
+				rt := mok.NewRoute(tc.req.GetUrl(), mok.RouteType(tc.req.GetType().Number()))
 
 				serverMock.
-					On("RouteCreate", mock.Anything, ept).
+					On("RouteCreate", mock.Anything, rt).
 					Return(mok.ErrAlreadyExist).
 					Once()
 

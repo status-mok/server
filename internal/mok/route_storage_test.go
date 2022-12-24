@@ -40,14 +40,14 @@ func Test_routeStorage_ServerGet(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			ept, err := tc.storage.RouteGet(ctx, tc.routeURL)
+			rt, err := tc.storage.RouteGet(ctx, tc.routeURL)
 			if len(tc.expErrorMsg) > 0 {
 				require.Error(t, err)
 				assert.ErrorContains(t, err, tc.expErrorMsg)
 			} else {
 				require.NoError(t, err)
-				require.NotNil(t, ept)
-				require.Equal(t, tc.routeURL, ept.URL())
+				require.NotNil(t, rt)
+				require.Equal(t, tc.routeURL, rt.URL())
 			}
 		})
 	}
