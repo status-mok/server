@@ -12,12 +12,25 @@ const (
 	RouteTypeUnspecified = 0
 	RouteTypeReqResp     = 1
 	RouteTypeWebSocket   = 2
+
+	RouteTypeReqRespString   = "req-resp"
+	RouteTypeWebSocketString = "websocket"
 )
 
 var (
 	RouteTypeAllowed = map[RouteType]struct{}{
 		RouteTypeReqResp:   {},
 		RouteTypeWebSocket: {},
+	}
+
+	StringToRouteType = map[string]RouteType{
+		RouteTypeReqRespString:   RouteTypeReqResp,
+		RouteTypeWebSocketString: RouteTypeWebSocket,
+	}
+
+	RouteTypeToString = map[RouteType]string{
+		RouteTypeReqResp:   RouteTypeReqRespString,
+		RouteTypeWebSocket: RouteTypeWebSocketString,
 	}
 )
 

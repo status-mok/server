@@ -15,6 +15,12 @@ const (
 	ServerTypeThrift      = 3
 	ServerTypeTCP         = 4
 	ServerTypeUDP         = 5
+
+	ServerTypeHTTPString   = "http"
+	ServerTypeGRPCString   = "grpc"
+	ServerTypeThriftString = "thrift"
+	ServerTypeTCPString    = "tcp"
+	ServerTypeUDPString    = "udp"
 )
 
 var (
@@ -24,6 +30,22 @@ var (
 		ServerTypeThrift: {},
 		ServerTypeTCP:    {},
 		ServerTypeUDP:    {},
+	}
+
+	StringToServerType = map[string]ServerType{
+		ServerTypeHTTPString:   ServerTypeHTTP,
+		ServerTypeGRPCString:   ServerTypeGRPC,
+		ServerTypeThriftString: ServerTypeThrift,
+		ServerTypeTCPString:    ServerTypeTCP,
+		ServerTypeUDPString:    ServerTypeUDP,
+	}
+
+	ServerTypeToString = map[ServerType]string{
+		ServerTypeHTTP:   ServerTypeHTTPString,
+		ServerTypeGRPC:   ServerTypeGRPCString,
+		ServerTypeThrift: ServerTypeThriftString,
+		ServerTypeTCP:    ServerTypeTCPString,
+		ServerTypeUDP:    ServerTypeUDPString,
 	}
 )
 

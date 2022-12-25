@@ -9,6 +9,7 @@ type Route interface {
 
 	URL() string
 	Type() RouteType
+	Disabled() bool
 
 	// FindExpectation(ctx context.Context, req *http.Request) (err error)
 }
@@ -39,4 +40,8 @@ func (e *route) URL() string {
 
 func (e *route) Type() RouteType {
 	return e._type
+}
+
+func (e *route) Disabled() bool {
+	return e.isDisabled
 }
