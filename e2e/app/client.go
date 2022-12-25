@@ -1,3 +1,5 @@
+//go:build e2e
+
 package app
 
 //go:generate mkdir -p http-client

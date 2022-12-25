@@ -14,6 +14,20 @@ type RouteMock struct {
 	mock.Mock
 }
 
+// Disabled provides a mock function with given fields:
+func (_m *RouteMock) Disabled() bool {
+	ret := _m.Called()
+
+	var r0 bool
+	if rf, ok := ret.Get(0).(func() bool); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	return r0
+}
+
 // ExpectationCreate provides a mock function with given fields: ctx, exp
 func (_m *RouteMock) ExpectationCreate(ctx context.Context, exp mok.Expectation) error {
 	ret := _m.Called(ctx, exp)
@@ -86,6 +100,20 @@ func (_m *RouteMock) ExpectationGet(ctx context.Context, id string) (mok.Expecta
 	}
 
 	return r0, r1
+}
+
+// Type provides a mock function with given fields:
+func (_m *RouteMock) Type() mok.RouteType {
+	ret := _m.Called()
+
+	var r0 mok.RouteType
+	if rf, ok := ret.Get(0).(func() mok.RouteType); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(mok.RouteType)
+	}
+
+	return r0
 }
 
 // URL provides a mock function with given fields:
